@@ -3,6 +3,7 @@ import tweepy
 import json
 import time
 import io
+import pprint as pp
 
 consumer_key="PVUSRJzwwdoLiTaXnurcuF2FY"
 consumer_secret="uGvBfc0f1nLA8e1LI5G5fqIak7GRjsYDLOfA09jePHy8YZ2Xr0"
@@ -27,10 +28,10 @@ class MyStreamListener(StreamListener):
         else:
             self.outfile.close()
             return False
-        
-    def on_error(self, status):
-        print(status)
 
+def on_error(self, status):
+    print(status)
+    
     def on_status(self, status):
         print(status.text)
 
@@ -38,21 +39,20 @@ if __name__ == '__main__':
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth)
-    
+    '''
     #---------------------------Streaming API---------------------------#
     myStreamListener = MyStreamListener(5)
     myStream = tweepy.Stream(auth = api.auth, listener=myStreamListener)
     myStream.filter(track=["stocks"], languages=['en'])
-    
+    '''
     
     #---------------------------Search API---------------------------#
-    results = api.search(q="stocks market")
-    with open('sample_tweets_search.json', 'w') as outfile:
+    results = api.search(q="stocks", count=100)
+    #pp.pprint(results[0])
+    #print len(results)
+    with open('sample_tweets_search.json', 'a') as outfile:
         for r in results:
+            #print (r.text)
             json.dump(r.text, outfile)
             outfile.write('\n')
     outfile.close()
-    
-
-
-
