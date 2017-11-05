@@ -1,8 +1,13 @@
 # CS145DataMining-Project
 Twitter project with topic: Stock Prediction 
 
-Teammates: Dangran Li, Shunji Zhan, Yaying Ye, Zeyu Zhang, Zixia Weng
+# Team 
+Dangran Li, Shunji Zhan, Yaying Ye, Zeyu Zhang, Zixia Weng
 
+# To run
+	sh run.sh
+
+# Websites
 Course Website: http://web.cs.ucla.edu/~yzsun/classes/2017Fall_CS145/schedule.html
 Google Doc: https://docs.google.com/document/d/1WFp37BFSy_vJiymspx5Sf09Fg9UZgQyEm2Lzp5juajI/edit
 
