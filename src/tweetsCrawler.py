@@ -50,7 +50,7 @@ if __name__ == '__main__':
     results = api.search(q="stocks", count=100)
     #pp.pprint(results[0])
     #print len(results)
-    with open('sample_tweets_search.json', 'a') as outfile:
+    with open('../sample_tweets_search.json', 'a') as outfile:
         for r in results:
             #print (r.text)
             json.dump(r.text, outfile)
