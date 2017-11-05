@@ -39,6 +39,7 @@ if __name__ == '__main__':
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth)
+    
     '''
     #---------------------------Streaming API---------------------------#
     myStreamListener = MyStreamListener(5)
@@ -48,12 +49,21 @@ if __name__ == '__main__':
     
     #---------------------------Search API---------------------------#
     results = api.search(q="stocks", count=100)
-    
-    with open('../sample_tweets_search.json', 'a') as outfile:
+    with open('../sample_tweets_search.json', 'w') as outfile:
+        tweetlist = []
         for r in results:
+
+            #-----------------JSON format output -----------------#
+            tweet_json = {'time': r.created_at.strftime('%Y-%m-%dT%H:%M:%S'), 'tweet': r.text }
+            tweetlist.append(tweet_json)
+            
+            '''
+            #-----------------Line format output -----------------#
             json.dump(r.created_at.strftime('%Y-%m-%dT%H:%M:%S'), outfile)
             outfile.write('\t')
-            json.dump(r.text, outfile)
+            json.dump(tweet_json, outfile)
             outfile.write('\n')
+            '''
+        json.dump(tweetlist, outfile)
     outfile.close()
     
