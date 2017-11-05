@@ -48,11 +48,12 @@ if __name__ == '__main__':
     
     #---------------------------Search API---------------------------#
     results = api.search(q="stocks", count=100)
-    #pp.pprint(results[0])
-    #print len(results)
+    
     with open('../sample_tweets_search.json', 'a') as outfile:
         for r in results:
-            #print (r.text)
+            json.dump(r.created_at.strftime('%Y-%m-%dT%H:%M:%S'), outfile)
+            outfile.write('\t')
             json.dump(r.text, outfile)
             outfile.write('\n')
     outfile.close()
+    
