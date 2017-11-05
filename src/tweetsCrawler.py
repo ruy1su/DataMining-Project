@@ -49,21 +49,34 @@ if __name__ == '__main__':
     
     #---------------------------Search API---------------------------#
     results = api.search(q="stocks", count=100)
-    with open('../sample_tweets_search.json', 'w') as outfile:
+
+    with open('../sample_tweets.json', 'r+') as f:
+        # read previous data
+        prev_data = json.load(f)
+        print "previous sample number: ", len(prev_data)
+
+        # get current data
         tweetlist = []
         for r in results:
 
             #-----------------JSON format output -----------------#
-            tweet_json = {'time': r.created_at.strftime('%Y-%m-%dT%H:%M:%S'), 'tweet': r.text }
+            tweet_json = {
+                'time': r.created_at.strftime('%Y-%m-%dT%H:%M:%S'),
+                'tweet': r.text
+            }
             tweetlist.append(tweet_json)
             
             '''
             #-----------------Line format output -----------------#
-            json.dump(r.created_at.strftime('%Y-%m-%dT%H:%M:%S'), outfile)
-            outfile.write('\t')
-            json.dump(tweet_json, outfile)
-            outfile.write('\n')
+            json.dump(r.created_at.strftime('%Y-%m-%dT%H:%M:%S'), f)
+            f.write('\t')
+            json.dump(tweet_json, f)
+            f.write('\n')
             '''
-        json.dump(tweetlist, outfile)
-    outfile.close()
+        new_data = prev_data + tweetlist
+        print "current sample number: ", len(new_data)
+
+        f.seek(0)
+        json.dump(new_data, f, indent=4)
+    f.close()
     
