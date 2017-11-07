@@ -13,8 +13,8 @@ def getDataframe(filePath):
     return x, y
 
 def main():
-	x, y = getDataframe(sp.AAPL_PATH)
-	print(x)
+    x, y = getDataframe(sp.AAPL_PATH)
+    print(x)
 
 if __name__ == '__main__':
-	main()
+    main()
