@@ -7,6 +7,7 @@ AAPL_PATH = "../data-set/AAPL.csv"
 GOOG_PATH = "../data-set/GOOG.csv"
 MSFT_PATH = "../data-set/MSFT.csv"
 
+# If DEBUG is True, will print out DEBUG info
 DEBUG = False
 
 class stockParser(object):
@@ -21,6 +22,16 @@ class stockParser(object):
 
             print self.data_frame_
 
+    #############################################################
+    # Get fluctuation vectors which contain fluctuation rate of
+    # past k days.
+    #
+    # Input: k - demensions of vector
+    # Output: x, y, date - Pandas DataFrame
+    #         x is fluctuation rate (k-demensional)
+    #         y is label (fluctuation rate of next day)
+    #         date is current date of vector x
+    #############################################################
     def getFluctuationVector(self, k):
         if k < 0:
             return None
@@ -48,21 +59,26 @@ class stockParser(object):
         fluc_vec = pd.DataFrame(fluc_vec)
 
 
-        # separate DataFrame into x, y, Date
+        # separate DataFrame into x, y, date
         x = fluc_vec.drop(['y', 'Date'], axis=1)
         y = fluc_vec['y']
-        Date = fluc_vec['Date']
+        date = fluc_vec['Date']
 
         if DEBUG:
             print fluc_record
             print fluc_vec
             print x
             print y
-            print Date
+            print date
 
-        return x, y, Date
+        return x, y, date
 
-
+    #############################################################
+    # Calculate the fluctuation based on closing price of current
+    # day and closing price of previous day.
+    # 
+    # Input: index of prevous and current stock
+    #############################################################
     def calcFluctuation(self, prev_ix, cur_ix):
         prev = self.data_frame_.loc[prev_ix, 'Close']
         cur = self.data_frame_.loc[cur_ix, 'Close']
@@ -72,7 +88,6 @@ class stockParser(object):
 
     def test(self):
         self.getFluctuationVector(5)
-
 
 
 def main():
