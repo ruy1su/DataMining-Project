@@ -2,10 +2,7 @@
 
 import pandas as pd
 import numpy as np
-
-AAPL_PATH = "../data-set/AAPL.csv"
-GOOG_PATH = "../data-set/GOOG.csv"
-MSFT_PATH = "../data-set/MSFT.csv"
+import utils
 
 # If DEBUG is True, will print out DEBUG info
 DEBUG = False
@@ -20,7 +17,7 @@ class stockParser(object):
             self.data_frame_ = self.data_frame_.loc[:10,:]
             self.size_ = len(self.data_frame_.values)
 
-            print self.data_frame_
+            print (self.data_frame_)
 
     #############################################################
     # Get fluctuation vectors which contain fluctuation rate of
@@ -48,8 +45,8 @@ class stockParser(object):
         fluc_vec = {'x'+str(i):fluc_vec[i - 1] for i in range(1, k + 1)}
 
         # Add label for each vector
-        fluc_vec['y'] = fluc_record[k : ]
-        # fluc_vec['y'] = [fluc_record[i] for i in range(k, len(fluc_record))]
+        # fluc_vec['y'] = fluc_record[k : ]
+        fluc_vec['y'] = [fluc_record[i] * 100 for i in range(k, len(fluc_record))]
 
         # Add Date associate with each vector
         fluc_vec['Date'] = self.data_frame_.loc[k : self.size_ - 2, 'Date'].values
@@ -65,11 +62,11 @@ class stockParser(object):
         date = fluc_vec['Date']
 
         if DEBUG:
-            print fluc_record
-            print fluc_vec
-            print x
-            print y
-            print date
+            print (fluc_record)
+            print (fluc_vec)
+            print (x)
+            print (y)
+            print (date)
 
         return x, y, date
 
