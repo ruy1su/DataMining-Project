@@ -58,8 +58,8 @@ class stockParser(object):
 
         # separate DataFrame into x, y, date
         x = fluc_vec.drop(['y', 'Date'], axis=1)
-        y = fluc_vec['y']
-        date = fluc_vec['Date']
+        y = pd.DataFrame(fluc_vec['y'])
+        date = pd.DataFrame(fluc_vec['Date'])
 
         if DEBUG:
             print (fluc_record)
