@@ -84,11 +84,11 @@ class stockParser(object):
 
 
     def test(self):
-        pass
+        self.getFluctuationVector(5)
 
 
 def main():
-    stock_parser = stockParser(GOOG_PATH)
+    stock_parser = stockParser(utils.GOOG_PATH)
     stock_parser.test()
 
 
