@@ -2,6 +2,7 @@
 
 import pandas as pd
 import numpy as np
+
 from sklearn import cross_validation
 
 AAPL_PATH = "../data-set/AAPL.csv"
@@ -18,20 +19,70 @@ def applyZScore(dataframe):
 
 # predicted_y and test_y are the predicted and actual y values respectively as numpy arrays
 # function prints the mean squared error value for the test dataset
-# Input: list
-def compute_mse(predicted_y, test_y):
+# Input: np.ndarray in SAME dimension
+#        [1, 1, 1, 1] vs. [1, 1, 0, 1]
+#     or [[1],[1],[1],[1]] vs. [[1],[1],[0],[1]]
+def computeMSE(predicted_y, test_y):
     mse = np.sum((predicted_y - test_y) ** 2) / predicted_y.shape[0]
     return mse
 
+def computeRecall(predicted_y, test_y):
+    TP, FN = 0, 0
+
+    for i in range(len(predicted_y)):
+        if((predicted_y[i] == 1) and (test_y[i] == 1)):
+            TP += 1
+        elif((predicted_y[i] == 0) and (test_y[i] == 1)):
+            FN += 1
+
+    return TP / (TP + FN)
+
+def computePrecision(predicted_y, test_y):
+    TP, FP = 0, 0
+
+    for i in range(len(predicted_y)):
+        if((predicted_y[i] == 1) and (test_y[i] == 1)):
+            TP += 1
+        elif((predicted_y[i] == 1) and (test_y[i] == 0)):
+            FP += 1
+
+    return TP / (TP + FP)
+
+def computeAccuracy(predicted_y, test_y):
+    TP, FP, TN, FN = 0, 0, 0, 0
+
+    for i in range(len(predicted_y)):
+        if((predicted_y[i] == 1) and (test_y[i] == 1)):
+            TP += 1
+        elif((predicted_y[i] == 1) and (test_y[i] == 0)):
+            FP += 1
+        elif((predicted_y[i] == 0) and (test_y[i] == 1)):
+            FN += 1
+        else:
+            TN += 1
+
+    return (TP + TN) / (TP + FP + TN + FN)
+
+# sign function, convert continuous value into two classes [0, 1]
+# Input vec is a DataFrame
+# Return a new DataFrame with each item applied sign function
+def sign(vec):
+    # value of vec will not be changed
+    new_vec = vec.applymap(lambda x: 1 if x >= 0 else 0)  
+
+    return new_vec
+
+# Perform K-Fold testing
 def KfoldTester(model, x, y, k):
     cv = cross_validation.KFold(len(x), n_folds = k)
+    # y = y['y']
 
     for train_idx, test_idx in cv:
         train_x = x.values[train_idx]
-        train_y = y.values[train_idx]
+        train_y = y.values.ravel()[train_idx]
 
         test_x = x.values[test_idx]
-        test_y = y.values[test_idx]
+        test_y = y.values.ravel()[test_idx]
 
         train_x = {'x'+str(i):[train_x[j][i] for j in range(len(train_x))] for i in range(len(train_x[0]))}
         train_x = pd.DataFrame(train_x)

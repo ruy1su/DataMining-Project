@@ -59,7 +59,7 @@ class regressionModel(object):
 
     def test(self, test_x, test_y):
         predicted_y = self.predict(test_x)
-        mse = utils.compute_mse(predicted_y, test_y.values)
+        mse = utils.computeMSE(predicted_y, test_y.values)
         print("MSE:", mse)
 
 
