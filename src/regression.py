@@ -77,13 +77,16 @@ def main():
     AAPL = sp.stockParser(utils.AAPL_PATH)
 
     x, y, date = AAPL.getFluctuationVector(5)
-    lm = regressionModel(0, zscore=True)
-    lm.train(x, y)
-    lm.test(x, y)
 
-    lm = regressionModel(0, zscore=False)
-    lm.train(x, y)
-    lm.test(x, y)
+    utils.KfoldTester(regressionModel(0, zscore=True), x, y, 5)
+
+    # lm = regressionModel(0, zscore=True)
+    # lm.train(x, y)
+    # lm.test(x, y)
+
+    # lm = regressionModel(0, zscore=False)
+    # lm.train(x, y)
+    # lm.test(x, y)
 
 if __name__ == '__main__':
     main()

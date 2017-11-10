@@ -84,7 +84,7 @@ class stockParser(object):
 
 
     def test(self):
-        self.getFluctuationVector(5)
+        pass
 
 
 def main():
