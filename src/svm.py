@@ -8,14 +8,24 @@ import stockParser as sp
 
 
 class SVM(object):
-
-    def __init__(self, model_type, zscore=False):
+    #############################################################
+    # 
+    # class_weight: is a dictionary of form {class_label : value},
+    #   where `value` is a floating point number > 0 that sets the 
+    #   parameter C of class class_label to C * value. The greater
+    #   the `value`, the more chance that a sample point of same 
+    #   class will be classified into its own class (recall up, but
+    #   precision may go down). 
+    #############################################################
+    def __init__(self, model_type, zscore=False, class_weight={}):
+        self.model_type_ = model_type
         self.zscore_ = zscore
+        self.class_weight_ = class_weight
 
         if(model_type == 0):
-            self.model_ = svm.SVC(kernel='linear')
+            self.model_ = svm.SVC(kernel='linear', class_weight=class_weight)
         elif(model_type == 1):
-            self.model_ = svm.SVC(kernel='rbf', class_weight={0 : 5})
+            self.model_ = svm.SVC(kernel='rbf', class_weight=class_weight)
 
 
     def train(self, x, y):
