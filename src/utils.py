@@ -75,7 +75,8 @@ def sign(vec):
 # Perform K-Fold testing
 def KfoldTester(model, x, y, k):
     cv = cross_validation.KFold(len(x), n_folds = k)
-    # y = y['y']
+
+    
 
     for train_idx, test_idx in cv:
         train_x = x.values[train_idx]

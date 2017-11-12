@@ -62,11 +62,7 @@ def main():
     x, y, date = AAPL.getFluctuationVector(5)
     y = utils.sign(y)
 
-    lm = SVM(1, zscore=True)
-    lm.train(x, y)
-    lm.test(x, y)
-
-    # utils.KfoldTester(regressionModel(0, zscore=True), x, y, 5)
+    utils.KfoldTester(SVM(1, zscore=True), x, y, 5)
 
 if __name__ == '__main__':
     main()
