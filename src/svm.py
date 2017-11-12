@@ -15,7 +15,7 @@ class SVM(object):
         if(model_type == 0):
             self.model_ = svm.SVC(kernel='linear')
         elif(model_type == 1):
-            self.model_ = svm.SVC(kernel='rbf')
+            self.model_ = svm.SVC(kernel='rbf', class_weight={0 : 5})
 
 
     def train(self, x, y):

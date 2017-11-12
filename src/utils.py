@@ -35,7 +35,9 @@ def computeRecall(predicted_y, test_y):
         elif((predicted_y[i] == 0) and (test_y[i] == 1)):
             FN += 1
 
-    return TP / (TP + FN)
+    ret = TP / (TP + FN) if (TP + FN) != 0 else 0
+
+    return ret
 
 def computePrecision(predicted_y, test_y):
     TP, FP = 0, 0
@@ -46,7 +48,9 @@ def computePrecision(predicted_y, test_y):
         elif((predicted_y[i] == 1) and (test_y[i] == 0)):
             FP += 1
 
-    return TP / (TP + FP)
+    ret = TP / (TP + FP) if (TP + FP) != 0 else 0
+
+    return ret
 
 def computeAccuracy(predicted_y, test_y):
     TP, FP, TN, FN = 0, 0, 0, 0
@@ -61,7 +65,9 @@ def computeAccuracy(predicted_y, test_y):
         else:
             TN += 1
 
-    return (TP + TN) / (TP + FP + TN + FN)
+    ret = (TP + TN) / (TP + FP + TN + FN) if (TP + FP + TN + FN) != 0 else 0
+
+    return ret
 
 # sign function, convert continuous value into two classes [0, 1]
 # Input vec is a DataFrame
