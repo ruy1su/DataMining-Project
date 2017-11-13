@@ -31,14 +31,15 @@ class regressionModel(object):
         gradient_func = None
         if(self.gradient_type_ == 0):
             gradient_func = self.closedForm
+        elif(self.gradient_type_ == 1):
+            gradient_func = self.getBetaBatchGradient
         else:
             print("Incorrect gradient type!\n\
                 Usage: 0 - closed form solution\n")
 
         # linear regression
         if(self.model_type_ == 0):
-            self.beta_ = gradient_func(train_x, train_y)
-
+            self.beta_ = gradient_func(train_x.values, train_y.values.ravel())
 
     def predict(self, x):
         # deep copy
@@ -67,12 +68,13 @@ class regressionModel(object):
             self.train(train_x, train_y)
 
             predicted_y = self.predict(test_x)
-
-            mse = utils.computeMSE(predicted_y, test_y.values)
+            
+            mse = utils.computeMSE(predicted_y, test_y.values.ravel())
             mse_sum += mse
 
             print("MSE:", mse)
 
+        print("-" * 50)
         print("Average MSE:", mse_sum / k)
         
 
@@ -87,12 +89,37 @@ class regressionModel(object):
 
         return beta
 
+
+    def getBetaBatchGradient(self, train_x, train_y):
+        beta = np.zeros(train_x.shape[1])
+
+        xTrans = train_x.transpose()
+        prev_cost = 0
+
+        while(True):
+            hypothesis = np.dot(train_x, beta)
+
+            loss = hypothesis - train_y
+
+            gradient = np.dot(xTrans, loss)
+
+            cost = np.sum(loss ** 2) / (2 * train_x.shape[0])
+            # When cost function does not change, then stop the loop
+            if(abs(prev_cost - cost) < 0.00001):
+                break
+            prev_cost = cost
+
+            # update
+            beta = beta - self.alpha_ * gradient
+
+        return beta
+
 def main():
     AAPL = sp.stockParser(utils.AAPL_PATH)
 
     x, y, date = AAPL.getFluctuationVector(5)
 
-    lm = regressionModel(0, zscore=True)
+    lm = regressionModel(0, gradient_type=1, zscore=True)
     lm.tester(x, y, 5)
 
 
