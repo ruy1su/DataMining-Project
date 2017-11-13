@@ -54,17 +54,32 @@ class SVM(object):
 
         return predicted_y
 
-    def test(self, test_x, test_y):
-        predicted_y = self.predict(test_x)
+    def tester(self, x, y, k):
+        pre_sum, recall_sum, acc_sum = 0, 0, 0
 
-        precision = utils.computePrecision(predicted_y.ravel(), test_y.values.ravel())
-        recall = utils.computeRecall(predicted_y.ravel(), test_y.values.ravel())
-        accuracy = utils.computeAccuracy(predicted_y.ravel(), test_y.values.ravel())
+        cv = utils.KfoldGenerator(x, y, k)
 
-        print("Precision:", precision)
-        print("Recall:", recall)
-        print("Accuracy:", accuracy)
+        for train_x, train_y, test_x, test_y in cv:
+            self.train(train_x, train_y)
 
+            predicted_y = self.predict(test_x)
+
+            precision = utils.computePrecision(predicted_y.ravel(), test_y.values.ravel())
+            recall = utils.computeRecall(predicted_y.ravel(), test_y.values.ravel())
+            accuracy = utils.computeAccuracy(predicted_y.ravel(), test_y.values.ravel())
+
+            pre_sum += precision
+            recall_sum += recall
+            acc_sum += accuracy
+
+            print("Precision:", precision)
+            print("Recall:", recall)
+            print("Accuracy:", accuracy)
+            print("-" * 50)
+
+        print("Average Precision:", pre_sum / k)
+        print("Average Recall:", recall_sum / k)
+        print("Average Accuracy:", acc_sum / k)
 
 def main():
     AAPL = sp.stockParser(utils.AAPL_PATH)
@@ -72,7 +87,8 @@ def main():
     x, y, date = AAPL.getFluctuationVector(5)
     y = utils.sign(y)
 
-    utils.KfoldTester(SVM(1, zscore=True), x, y, 5)
+    lm = SVM(1, zscore=True)
+    lm.tester(x, y, 5)
 
 if __name__ == '__main__':
     main()
