@@ -79,10 +79,11 @@ def sign(vec):
     return new_vec
 
 # Perform K-Fold testing
-def KfoldTester(model, x, y, k):
+def KfoldGenerator(x, y, k):
     cv = cross_validation.KFold(len(x), n_folds = k)
 
-    
+    ret_train_x, ret_train_y = [], []
+    ret_test_x, ret_test_y = [], []
 
     for train_idx, test_idx in cv:
         train_x = x.values[train_idx]
@@ -103,8 +104,12 @@ def KfoldTester(model, x, y, k):
         test_y = {'y':test_y}
         test_y = pd.DataFrame(test_y)
 
-        model.train(train_x, train_y)
-        model.test(test_x, test_y)
+        ret_train_x.append(train_x)
+        ret_train_y.append(train_y)
+        ret_test_x.append(test_x)
+        ret_test_y.append(test_y)
+
+    return zip(ret_train_x, ret_train_y, ret_test_x, ret_test_y)
 
 
 def main():

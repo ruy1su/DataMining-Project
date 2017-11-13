@@ -63,27 +63,9 @@ class regressionModel(object):
     def tester(self, x, y, k):
         mse_sum = 0
 
-        cv = cross_validation.KFold(len(x), n_folds = k)
+        cv = utils.KfoldGenerator(x, y, k)
 
-        for train_idx, test_idx in cv:
-            train_x = x.values[train_idx]
-            train_y = y.values.ravel()[train_idx]
-
-            test_x = x.values[test_idx]
-            test_y = y.values.ravel()[test_idx]
-
-            train_x = {'x'+str(i):[train_x[j][i] for j in range(len(train_x))] for i in range(len(train_x[0]))}
-            train_x = pd.DataFrame(train_x)
-
-            train_y = {'y':train_y}
-            train_y = pd.DataFrame(train_y)
-
-            test_x = {'x'+str(i):[test_x[j][i] for j in range(len(test_x))] for i in range(len(test_x[0]))}
-            test_x = pd.DataFrame(test_x)
-
-            test_y = {'y':test_y}
-            test_y = pd.DataFrame(test_y)
-
+        for (train_x, train_y, test_x, test_y) in cv:
             self.train(train_x, train_y)
 
             predicted_y = self.predict(test_x)
