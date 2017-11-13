@@ -3,8 +3,11 @@
 import pandas as pd
 import numpy as np
 
+from sklearn import cross_validation
+
 import utils
 import stockParser as sp
+
 
 class regressionModel(object):
     def __init__(self, model_type, gradient_type=0, zscore=False):
@@ -57,10 +60,41 @@ class regressionModel(object):
         return predicted_y
 
 
-    def test(self, test_x, test_y):
-        predicted_y = self.predict(test_x)
-        mse = utils.computeMSE(predicted_y, test_y.values)
-        print("MSE:", mse)
+    def tester(self, x, y, k):
+        mse_sum = 0
+
+        cv = cross_validation.KFold(len(x), n_folds = k)
+
+        for train_idx, test_idx in cv:
+            train_x = x.values[train_idx]
+            train_y = y.values.ravel()[train_idx]
+
+            test_x = x.values[test_idx]
+            test_y = y.values.ravel()[test_idx]
+
+            train_x = {'x'+str(i):[train_x[j][i] for j in range(len(train_x))] for i in range(len(train_x[0]))}
+            train_x = pd.DataFrame(train_x)
+
+            train_y = {'y':train_y}
+            train_y = pd.DataFrame(train_y)
+
+            test_x = {'x'+str(i):[test_x[j][i] for j in range(len(test_x))] for i in range(len(test_x[0]))}
+            test_x = pd.DataFrame(test_x)
+
+            test_y = {'y':test_y}
+            test_y = pd.DataFrame(test_y)
+
+            self.train(train_x, train_y)
+
+            predicted_y = self.predict(test_x)
+
+            mse = utils.computeMSE(predicted_y, test_y.values)
+            mse_sum += mse
+
+            print("MSE:", mse)
+
+        print("Average MSE:", mse_sum / k)
+        
 
 
     def closedForm(self, train_x, train_y):
@@ -78,15 +112,9 @@ def main():
 
     x, y, date = AAPL.getFluctuationVector(5)
 
-    utils.KfoldTester(regressionModel(0, zscore=True), x, y, 5)
+    lm = regressionModel(0, zscore=True)
+    lm.tester(x, y, 5)
 
-    # lm = regressionModel(0, zscore=True)
-    # lm.train(x, y)
-    # lm.test(x, y)
-
-    # lm = regressionModel(0, zscore=False)
-    # lm.train(x, y)
-    # lm.test(x, y)
 
 if __name__ == '__main__':
     main()
