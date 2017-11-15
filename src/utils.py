@@ -19,7 +19,6 @@ MSFT_PATH = "../data-set/MSFT.csv"
 #       Pandas DataFrame, could be any-dimension
 #######################################################################
 def applyZScore(dataframe):
-    print(type(dataframe))
     expectation = np.mean(dataframe, axis=0)
     std_dev = np.std(dataframe, axis=0)
 
