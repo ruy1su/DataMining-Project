@@ -106,8 +106,6 @@ class MLNN(object):
 
             predicted_y = self.predict(test_x)
 
-            print(predicted_y)
-
             precision = utils.computePrecision(predicted_y, test_y.values.ravel())
             recall = utils.computeRecall(predicted_y, test_y.values.ravel())
             accuracy = utils.computeAccuracy(predicted_y, test_y.values.ravel())
