@@ -50,7 +50,7 @@ if __name__ == '__main__':
     #---------------------------Search API---------------------------#
     results = api.search(q="stocks", count=100)
 
-    with open('../sample_tweets.json', 'r+') as f:
+    with open('sample_tweets.json', 'r+') as f:
         # read previous data
         prev_data = json.load(f)
         print "previous sample number: ", len(prev_data)

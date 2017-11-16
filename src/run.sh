@@ -1,4 +1,3 @@
 #!/bin/bash
 
-cd src
-python tweetsCrawler.py
+python Crawler/tweetsCrawler.py
