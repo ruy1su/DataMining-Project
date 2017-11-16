@@ -6,9 +6,9 @@ import numpy as np
 from sklearn import cross_validation
 
 # Define the path of stock record file 
-AAPL_PATH = "../data-set/AAPL.csv"
-GOOG_PATH = "../data-set/GOOG.csv"
-MSFT_PATH = "../data-set/MSFT.csv"
+AAPL_PATH = "../data-set/stocks/AAPL.csv"
+GOOG_PATH = "../data-set/stocks/GOOG.csv"
+MSFT_PATH = "../data-set/stocks/MSFT.csv"
 
 
 #######################################################################
