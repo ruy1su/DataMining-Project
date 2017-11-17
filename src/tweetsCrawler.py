@@ -1,82 +1,60 @@
-from tweepy.streaming import StreamListener
-import tweepy
-import json
-import time
-import io
-import pprint as pp
+# -*- coding: utf-8 -*-
+import sys,getopt,datetime,codecs
+if sys.version_info[0] < 3:
+    import got
+else:
+    import got3 as got
 
-consumer_key="PVUSRJzwwdoLiTaXnurcuF2FY"
-consumer_secret="uGvBfc0f1nLA8e1LI5G5fqIak7GRjsYDLOfA09jePHy8YZ2Xr0"
-access_token="924383751198478337-WPaL7r1fSe7WSsewzECVf1aAfwHHREE"
-access_token_secret="aQlkuSWdDh7Iq6GpqV4Wzn8uDFbMAxL4lJFbNMwZy2SrZ"
-
-class MyStreamListener(StreamListener):
-    def __init__(self, time_limit=30):
-        self.start = time.time()
-        self.time_limit = time_limit
-        self.outfile = open('sample_tweets_streaming.json', 'w')
-        super(MyStreamListener, self).__init__()
+def main(argv):
+    keywords={"Apple","Google","Microsoft"}
+    folders={"APPL","GOOG","MSFT"}
+    month=str(argv[1])
+    year=argv[0]
+    day=01
+    totalDays=30
+    if month=='01' or month=='03' or month=='05' or month=='07'or month=='08'or month=='10' or month=='12': totalDays=31
+    if month=='02': totalDays=29
+    while day <= totalDays:
     
-    def on_data(self, data):
-        if (time.time() - self.start < self.time_limit):
-            parsed_data = json.loads(data)
-            #str_to_print = (parsed_data["text"]).encode('utf8', 'replace')
-            #self.outfile.write(str_to_print)
-            json.dump(parsed_data["text"], self.outfile)
-            self.outfile.write("\n")
-            return True
-        else:
-            self.outfile.close()
-            return False
+        for word,folder in zip(keywords,folders):
+	
+		#opts, args = getopt.getopt(argv, "", ("username=", "near=", "within=", "since=", "until=", "querysearch=", "toptweets", "maxtweets=", "output="))
+                tweetCriteria = got.manager.TweetCriteria()
+                date1=str(year)+"-"+str(month)+"-"+str(day).zfill(2)
+                if day==totalDays : date2=str(year)+"-"+str(int(month)+1)+"-"+str(1).zfill(2)
+                else:  date2=str(year)+"-"+str(month)+"-"+str (day+1).zfill(2)
+		outputFileName = folder+"-"+date1 +".csv"
+		
+		tweetCriteria.since = date1
+		tweetCriteria.until =date2
+		tweetCriteria.querySearch =word	
+		tweetCriteria.maxTweets = 1000
+		
 
-def on_error(self, status):
-    print(status)
-    
-    def on_status(self, status):
-        print(status.text)
+		dirr="../data-set/"+folder+"/"+outputFileName
+				
+		outputFile = codecs.open(dirr, "w+", "utf-8")
 
+		outputFile.write('retweets;favorites;text;mentions;hashtags')
+
+		print('Searching...\n')
+                
+		def receiveBuffer(tweets):
+                        
+			for t in tweets:
+				outputFile.write(('\n%d;%d;%s;%s;%s' % ( t.retweets,t.favorites,t.text,t.mentions, t.hashtags)))
+				#print (t.username, t.date.strftime("%Y-%m-%d %H:%M"),t.text)
+				
+			outputFile.flush();
+
+			print('More %d saved on file...\n' % len(tweets))
+		got.manager.TweetManager.getTweets(tweetCriteria, receiveBuffer)
+		outputFile.close()
+		print('Done. Output file generated "%s".' % outputFileName)
+		
+		
+        day+=1
+	
+  
 if __name__ == '__main__':
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_token_secret)
-    api = tweepy.API(auth)
-    
-    '''
-    #---------------------------Streaming API---------------------------#
-    myStreamListener = MyStreamListener(5)
-    myStream = tweepy.Stream(auth = api.auth, listener=myStreamListener)
-    myStream.filter(track=["stocks"], languages=['en'])
-    '''
-    
-    #---------------------------Search API---------------------------#
-    results = api.search(q="stocks", count=100)
-
-    with open('../sample_tweets.json', 'r+') as f:
-        # read previous data
-        prev_data = json.load(f)
-        print "previous sample number: ", len(prev_data)
-
-        # get current data
-        tweetlist = []
-        for r in results:
-
-            #-----------------JSON format output -----------------#
-            tweet_json = {
-                'time': r.created_at.strftime('%Y-%m-%dT%H:%M:%S'),
-                'tweet': r.text
-            }
-            tweetlist.append(tweet_json)
-            
-            '''
-            #-----------------Line format output -----------------#
-            json.dump(r.created_at.strftime('%Y-%m-%dT%H:%M:%S'), f)
-            f.write('\t')
-            json.dump(tweet_json, f)
-            f.write('\n')
-            '''
-        new_data = prev_data + tweetlist
-        print "current sample number: ", len(new_data)
-
-        f.seek(0)
-        json.dump(new_data, f, indent=4)
-    f.close()
-    
+	main(sys.argv[1:])
