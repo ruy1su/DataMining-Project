@@ -1,3 +1,6 @@
+# MACOS Dsfile
+.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 src/__pycache__/
