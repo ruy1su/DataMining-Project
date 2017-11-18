@@ -12,7 +12,7 @@ def main(argvs):
                 if x < 10:
                     readFileName = "../data-set/"+ argv + "/" + argv+ "-2010-01-0" + str(x) + ".csv"
                 else:
-                    readFileName = "../data-set/"+ argv + "/" + argv+ "-2017-01-" + str(x) + ".csv"
+                    readFileName = "../data-set/"+ argv + "/" + argv+ "-2010-01-" + str(x) + ".csv"
                 sentiment = 0.0
                 with open(readFileName) as csvfile:
                     reader = csv.DictReader(csvfile,delimiter=';')
