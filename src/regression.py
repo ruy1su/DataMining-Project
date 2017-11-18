@@ -125,11 +125,14 @@ class regressionModel(object):
     #       K-Fold parameter
     #############################################################
     def tester(self, x, y, k):
-        mse_sum = 0
+        mse_sum, cnt = 0, 1
 
         cv = utils.KfoldGenerator(x, y, k)
 
         for (train_x, train_y, test_x, test_y) in cv:
+            print("%s%d-Fold%s" % ("*", cnt, "*"))
+            cnt += 1
+
             self.train(train_x, train_y)
 
             predicted_y = self.predict(test_x)
@@ -142,7 +145,7 @@ class regressionModel(object):
 
             print("MSE:", mse)
 
-        print("-" * 50)
+        print("%s%s%s" % ("*", "Average", "*"))
         print("Average MSE:", mse_sum / k)
         
 
