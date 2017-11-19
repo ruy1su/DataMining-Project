@@ -7,9 +7,9 @@ import numpy as np
 
 import tester
 
-
 def main():
-    tester.tester(5)
+    ts = tester.Tester(5)
+    ts.testAll(5, 0)
 
 if __name__ == '__main__':
     main()
