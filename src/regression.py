@@ -4,7 +4,9 @@ import pandas as pd
 import numpy as np
 
 import utils
+import tester
 import stockParser as sp
+import featureExtractor as fe
 
 #############################################################
 # 
@@ -105,49 +107,6 @@ class regressionModel(object):
 
         return predicted_y
 
-    #############################################################
-    # Model Testing Function
-    #
-    # This function used K-Fold to test the performance of 
-    # current learning model, and calculate Most Square Error (MSE)
-    # at each iteration.
-    #
-    # Input:
-    #   x:  
-    #       feature vector data set
-    #       type: Pandas DataFrame (n * p dimension)
-    #       x.values: [[x11, x12, ..., x1p], ..., [xn1, ..., xnp]]
-    #   y:  
-    #       label vector data set
-    #       type: Pandas DataFrame (n * 1 dimension)
-    #       y.values: [[y1], [y2], [y3], ..., [yn]]
-    #   k:
-    #       K-Fold parameter
-    #############################################################
-    def tester(self, x, y, k):
-        mse_sum, cnt = 0, 1
-
-        cv = utils.KfoldGenerator(x, y, k)
-
-        for (train_x, train_y, test_x, test_y) in cv:
-            print("%s%d-Fold%s" % ("*", cnt, "*"))
-            cnt += 1
-
-            self.train(train_x, train_y)
-
-            predicted_y = self.predict(test_x)
-
-            # computeMSE need input params in excatly same dimension
-            # Here both predicted_y and test_y.values.ravel() is a
-            # n-dimension vector [y1, y2, ..., yn]
-            mse = utils.computeMSE(predicted_y, test_y.values.ravel())
-            mse_sum += mse
-
-            print("MSE:", mse)
-
-        print("%s%s%s" % ("*", "Average", "*"))
-        print("Average MSE:", mse_sum / k)
-        
 
     #############################################################
     # Using closed form formula to calculate the weight vector beta
@@ -225,12 +184,14 @@ class regressionModel(object):
         return beta
 
 def main():
-    AAPL = sp.stockParser(utils.AAPL_PATH)
+    # create feature extractor for Google
+    extractor = fe.featureExtractor(0)
 
-    x, y, date = AAPL.getFluctuationVector(5)
+    # get features, label and corresponding date
+    x, y, date = extractor.getFeature(5, 0)
 
-    lm = regressionModel(0, gradient_type=0, zscore=True)
-    lm.tester(x, y, 5)
+    ts = tester.Tester(5)
+    ts.test(regressionModel(0, gradient_type=0, zscore=True), x, y, 0)
 
 
 if __name__ == '__main__':

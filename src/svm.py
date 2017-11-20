@@ -4,7 +4,9 @@ import numpy as np
 from sklearn import svm
 
 import utils
+import tester
 import stockParser as sp
+import featureExtractor as fe
 
 
 class SVM(object):
@@ -36,6 +38,7 @@ class SVM(object):
         elif(model_type == 1):
             self.model_ = svm.SVC(kernel='rbf', class_weight=class_weight)
 
+
     #######################################################################
     # Model Training function
     # Input:
@@ -58,6 +61,7 @@ class SVM(object):
             train_x = utils.applyZScore(train_x)
 
         self.model_.fit(train_x.values, train_y.values.ravel())
+
 
     #######################################################################
     # Model Prediction Function
@@ -85,64 +89,18 @@ class SVM(object):
 
         return predicted_y
 
-    #######################################################################
-    # Model Testing Function
-    #
-    # This function used K-Fold to test the performance of 
-    # current learning model, calculate Precision, Recall and Accuracy
-    # at each iteration.
-    #
-    # Input:
-    #   x:  
-    #       feature vector data set
-    #       type: Pandas DataFrame (n * p dimension)
-    #       x.values: [[x11, x12, ..., x1p], ..., [xn1, ..., xnp]]
-    #   y:  
-    #       label vector data set
-    #       type: Pandas DataFrame (n * 1 dimension)
-    #       y.values: [[y1], [y2], [y3], ..., [yn]]
-    #   k:
-    #       K-Fold parameter
-    #######################################################################
-    def tester(self, x, y, k):
-        pre_sum, recall_sum, acc_sum, cnt = 0, 0, 0, 1
-
-        # generate K-Fold testing data set
-        cv = utils.KfoldGenerator(x, y, k)
-
-        for train_x, train_y, test_x, test_y in cv:
-            print("%s%d-Fold%s" % ("*", cnt, "*"))
-            cnt += 1
-
-            self.train(train_x, train_y)
-
-            predicted_y = self.predict(test_x)
-
-            precision = utils.computePrecision(predicted_y, test_y.values.ravel())
-            recall = utils.computeRecall(predicted_y, test_y.values.ravel())
-            accuracy = utils.computeAccuracy(predicted_y, test_y.values.ravel())
-
-            pre_sum += precision
-            recall_sum += recall
-            acc_sum += accuracy
-
-            print("Precision:", precision)
-            print("Recall:", recall)
-            print("Accuracy:", accuracy)
-
-        print("%s%s%s" % ("*", "Average", "*"))
-        print("Average Precision:", pre_sum / k)
-        print("Average Recall:", recall_sum / k)
-        print("Average Accuracy:", acc_sum / k)
 
 def main():
-    AAPL = sp.stockParser(utils.AAPL_PATH)
+    # create feature extractor for Google
+    extractor = fe.featureExtractor(0)
 
-    x, y, date = AAPL.getFluctuationVector(5)
+    # get features, label and corresponding date
+    x, y, date = extractor.getFeature(5, 0)
     y = utils.sign(y)
 
-    lm = SVM(1, zscore=True)
-    lm.tester(x, y, 5)
+    ts = tester.Tester(5)
+    ts.test(SVM(1, zscore=True), x, y, 1)
+
 
 if __name__ == '__main__':
     main()

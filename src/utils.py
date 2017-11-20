@@ -182,7 +182,7 @@ def sign(vec):
 #       y.values: [[y1], [y2], [y3], ..., [yn]]
 #######################################################################
 def KfoldGenerator(x, y, k):
-    cv = cross_validation.KFold(len(x), n_folds = k)
+    cv = cross_validation.KFold(len(x), n_folds = k, shuffle=True, random_state=None)
 
     ret_train_x, ret_train_y = [], []
     ret_test_x, ret_test_y = [], []
@@ -212,6 +212,7 @@ def KfoldGenerator(x, y, k):
         ret_test_y.append(test_y)
 
     return zip(ret_train_x, ret_train_y, ret_test_x, ret_test_y)
+
 
 #######################################################################
 # Get next day
@@ -248,8 +249,10 @@ def nextDay(date="", year=0, month=0, day=0):
 
     return ("%04d-%02d-%02d" % (year, month, day))
 
+
 def main():
     pass
+
 
 if __name__ == '__main__':
     main()
