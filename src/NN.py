@@ -3,6 +3,7 @@
 
 import tensorflow as tf
 import numpy as np
+import random
 
 
 class NN:
@@ -52,13 +53,18 @@ class NN:
         return outputs
 
 
+def f(X):
+    return np.square(X) + 0.53
+
+
 if __name__ == '__main__':
+    # X = np.random.rand(300, 5)
     X = np.linspace(-1, 1, 300)[:, np.newaxis]
-    noise = np.random.normal(0, 0.05, X.shape)
-    Y = np.square(X) - 0.5 + noise
+    Y = f(X)
+    Y += np.random.normal(-0.05, 0.05, Y.shape)     # add noise
 
     nn = NN(X, Y, stepSize=0.1, activation_function=tf.sigmoid, hiddenLayers=5, layerNodes=30)
-    nn.train(10000)
+    nn.train(3000)
 
 
 
