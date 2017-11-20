@@ -17,13 +17,15 @@ def readFromPath(dirStr):
 	dirStrWoSlash = dirStr[:-1]
 	defaultDir = '../data-set/tweets/'
 	with open('../data-set/sentiments/'+dirStrWoSlash+'-mood-multi.csv', 'w') as fout:
+		#data names
+		fout.write('date,alert,happy,calm,compound\n')
 		for fle in os.listdir(defaultDir + dirStr):
 			#Getting date
 			match =  re.search(r'\d{4}-\d{2}-\d{2}', fle)
 			date = datetime.strptime(match.group(), '%Y-%m-%d').date()
 			sentDim = []
 			openPath = defaultDir + dirStr + fle
-			print openPath
+			# print openPath
 			sentDim = getTwt(openPath)
 			fout.write('%s,%s,%s,%s,%s\n' % (str(date).replace("-", "-"),sentDim[0], sentDim[1], sentDim[2], sentDim[3]))
 	fout.close()		
