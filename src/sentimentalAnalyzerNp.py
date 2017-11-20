@@ -29,6 +29,8 @@ def main(argvs):
                         date = "2010-01-0" + str(x)
                     else:
                         date = "2010-01-" + str(x)
+            
+            
                 csvfile.close()
                 outfile.write(date)
                 outfile.write('\t')

@@ -213,6 +213,40 @@ def KfoldGenerator(x, y, k):
 
     return zip(ret_train_x, ret_train_y, ret_test_x, ret_test_y)
 
+#######################################################################
+# Get next day
+# For example, next day of 2010-12-31 is 2011-01-01
+# 
+# Input:
+#   date: current day, in the format of year-month-day
+#   year: specify year if date == ""
+#   month: specify month if date == ""
+#   day: specify day if date == ""
+# 
+# Output:
+#   next day of input day, in the format of year-month-day
+#
+# Usage: nextDay("2010-01-01") or nextDay(year=2011, month=12, day=31)
+#######################################################################
+def nextDay(date="", year=0, month=0, day=0):
+    if(date != ""):
+        date = date.split('-')
+        year = eval(date[0])
+        month = eval(date[1] if date[1][0] != '0' else date[1][1])
+        day = eval(date[2] if date[2][0] != '0' else date[2][1])
+
+    month_days = [[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+                  [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]]
+
+    # if is_leap == 0, indicates current year is not leap year
+    is_leap = 0 if (year % 4 != 0 or (year % 100 == 0 and year % 400 != 0)) else 1
+
+    # update day, month, year
+    day = 1 if (month_days[is_leap][month - 1] == day) else day + 1
+    month = 1 if (day == 1 and month == 12) else (month + 1 if (day == 1) else month)
+    year = year + 1 if (month == 1 and day == 1) else year
+
+    return ("%04d-%02d-%02d" % (year, month, day))
 
 def main():
     pass

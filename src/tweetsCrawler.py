@@ -6,11 +6,11 @@ else:
     import got3 as got
 
 def main(argv):
-    keywords={"Apple","Google","Microsoft"}
-    folders={"APPL","GOOG","MSFT"}
+    keywords={"Apple"}#,"Google","Microsoft"}
+    folders={"AAPL"} #,"GOOG","MSFT"}
     month=str(argv[1])
     year=argv[0]
-    day=01
+    day=23
     totalDays=30
     if month=='01' or month=='03' or month=='05' or month=='07'or month=='08'or month=='10' or month=='12': totalDays=31
     if month=='02': totalDays=29
@@ -31,7 +31,7 @@ def main(argv):
 		tweetCriteria.maxTweets = 1000
 		
 
-		dirr="../data-set/"+folder+"/"+outputFileName
+		dirr="../data-set/tweets/"+folder+"/"+outputFileName
 				
 		outputFile = codecs.open(dirr, "w+", "utf-8")
 
