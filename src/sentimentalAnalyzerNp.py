@@ -11,7 +11,7 @@ def main():
         writeFileName = "../data-set/sentiments/" + folder + "-mood-pn.csv"
         datafolder = "../data-set/tweets/" + folder +"/"
         with open(writeFileName, 'w') as outfile:
-            outfile.write('date,polarity\n')
+            outfile.write('date,polarity,magnitude\n')
             for datafile in os.listdir(datafolder):
                 match =  re.search(r'\d{4}-\d{2}-\d{2}', datafile)
                 date = datetime.strptime(match.group(), '%Y-%m-%d').date()
@@ -20,15 +20,18 @@ def main():
                     reader = csv.DictReader(csvfile,delimiter=';')
                     count = 0
                     sentiment = 0.0
+                    magnitude = 0.0
                     for row in reader:
                         count += 1
                         text = row['text'].decode('ascii', errors="replace")
                         #print text
                         textblob = TextBlob(text)
                         sentiment += textblob.sentiment.polarity
+                        magnitude += textblob.sentiment.magnitude
                         sentiment = sentiment / count
+                        magnitude = magnitude / count
                 csvfile.close()
-                outfile.write(str(date) + ',' + str(sentiment) + '\n')
+                outfile.write(str(date) + ',' + str(sentiment) + ',' + str(magnitude)+'\n')
         outfile.close
         '''
             for x in range (1, 32):
