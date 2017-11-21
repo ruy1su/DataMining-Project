@@ -10,8 +10,8 @@ from datetime import datetime
 
 def read():
 	readFromPath('AAPL/')
-	readFromPath('GOOG/')
-	readFromPath('MSFT/')
+	# readFromPath('GOOG/')
+	# readFromPath('MSFT/')
 
 def readFromPath(dirStr):
 	dirStrWoSlash = dirStr[:-1]
@@ -27,7 +27,7 @@ def readFromPath(dirStr):
 			openPath = defaultDir + dirStr + fle
 			# print openPath
 			sentDim = getTwt(openPath)
-			fout.write('%s,%s,%s,%s,%s\n' % (str(date).replace("-", "-"),sentDim[0], sentDim[1], sentDim[2], sentDim[3]))
+			fout.write('%s,%s,%s,%s,%s\n' % (str(date), sentDim[0], sentDim[1], sentDim[2], sentDim[3]))
 	fout.close()		
 def getTwt(openPath):
 
@@ -42,7 +42,6 @@ def getTwt(openPath):
 				ls = line.rstrip().split(';')
 				twt = ls[2]
 				twts.append(twt)
-            	# line = line.replace(",", "\t")
             	# fout.write('%s\t%s\t%s\n' % (id0, id1, '1'))
             	# fout.write('%s\t%s\t%s\n' % (id1, id0, '1'))
     print twts
@@ -56,7 +55,8 @@ def sentimentAnalyzer(twts):
              "Service - Little slow, probably because too many people.",
              "The place is not easy to locate",
              "Mushroom fried rice was tasty",
-             "hartzprod Slightly weird. I hope nothing comes up if you google me nude. lol"]
+             "hartzprod Slightly weird. I hope nothing comes up if you google me nude. lol",
+             "My rank is very high, that's awesome"]
     
     sentDim = {'neg':'Alert','pos':'Happy', 'neu':'Calm','compound':'compound'}
     
@@ -67,7 +67,9 @@ def sentimentAnalyzer(twts):
     sentimentCompound = []
 
     sid = SentimentIntensityAnalyzer()
-    assert(len(twts)>0)
+    # assert(len(twts)>0)
+    if len(twts) == 0:
+        return [0.5,0.5,0.5,0.5]
     for sentence in twts:
         print(sentence+'\n')
         i = 0
@@ -87,7 +89,7 @@ def sentimentAnalyzer(twts):
     sentiment4OneDay4OneCom.append(sum(sentimentHappy) / float(len(sentimentHappy)))
     sentiment4OneDay4OneCom.append(sum(sentimentCalm) / float(len(sentimentCalm)))
     sentiment4OneDay4OneCom.append(sum(sentimentCompound) / float(len(sentimentCompound)))
-    print (sentiment4OneDay4OneCom)
+    # print (sentiment4OneDay4OneCom)
     return sentiment4OneDay4OneCom
 
 # getTwt()
