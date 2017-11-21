@@ -10,8 +10,8 @@ from datetime import datetime
 
 def read():
 	readFromPath('AAPL/')
-	# readFromPath('GOOG/')
-	# readFromPath('MSFT/')
+	readFromPath('GOOG/')
+	readFromPath('MSFT/')
 
 def readFromPath(dirStr):
 	dirStrWoSlash = dirStr[:-1]
