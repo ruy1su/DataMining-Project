@@ -41,11 +41,11 @@ class sentimentAnalyzerMultiDims:
             	if firstline:    
             		firstline = False
             	else:
+                    #Only read english sentences
+                    ls = line.decode('ascii', errors="replace")
     				ls = line.rstrip().split(';')
     				twt = ls[2]
     				twts.append(twt)
-                	# fout.write('%s\t%s\t%s\n' % (id0, id1, '1'))
-                	# fout.write('%s\t%s\t%s\n' % (id1, id0, '1'))
         print twts
         return sentimentAnalyzer(twts)
 
