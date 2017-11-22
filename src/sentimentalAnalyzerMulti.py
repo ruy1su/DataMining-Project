@@ -10,15 +10,15 @@ from datetime import datetime
 
 class sentimentAnalyzerMultiDims:
 
-    def read():
-    	readFromPath('AAPL/')
-    	readFromPath('GOOG/')
-    	readFromPath('MSFT/')
+    def read(self):
+    	self.readFromPath('AAPL/')
+    	self.readFromPath('GOOG/')
+    	self.readFromPath('MSFT/')
 
-    def readFromPath(dirStr):
+    def readFromPath(self,dirStr):
     	dirStrWoSlash = dirStr[:-1]
     	defaultDir = '../data-set/tweets/'
-    	with open('../data-set/sentiments/'+dirStrWoSlash+'-mood-multi.csv', 'w') as fout:
+    	with open('../data-set/sentiments/'+dirStrWoSlash+'-mood-multiii.csv', 'w') as fout:
     		#data names
     		fout.write('date,alert,happy,calm,compound\n')
     		for fle in os.listdir(defaultDir + dirStr):
@@ -28,10 +28,10 @@ class sentimentAnalyzerMultiDims:
     			sentDim = []
     			openPath = defaultDir + dirStr + fle
     			# print openPath
-    			sentDim = getTwt(openPath)
+    			sentDim = self.getTwt(openPath)
     			fout.write('%s,%s,%s,%s,%s\n' % (str(date), sentDim[0], sentDim[1], sentDim[2], sentDim[3]))
     	fout.close()		
-    def getTwt(openPath):
+    def getTwt(self,openPath):
 
         with open(openPath) as fin:
             twts = []
@@ -41,15 +41,14 @@ class sentimentAnalyzerMultiDims:
             	if firstline:    
             		firstline = False
             	else:
-                    #Only read english sentences
-                    ls = line.decode('ascii', errors="replace")
-    				ls = line.rstrip().split(';')
-    				twt = ls[2]
-    				twts.append(twt)
+                    ls = line.decode('ascii', errors="replace")                     #Only read english sentences
+                    ls = line.rstrip().split(';')
+                    twt = ls[2]
+                    twts.append(twt)
         print twts
-        return sentimentAnalyzer(twts)
+        return self.sentimentAnalyzer(twts)
 
-    def sentimentAnalyzer(twts):
+    def sentimentAnalyzer(self,twts):
         test = ["Great place to be when you are in Bangalore.",
                  "The place was being renovated when I visited so the seating was limited.",
                  "Loved the ambience, loved the food",
