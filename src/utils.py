@@ -10,6 +10,16 @@ AAPL_PATH = "../data-set/stocks/AAPL.csv"
 GOOG_PATH = "../data-set/stocks/GOOG.csv"
 MSFT_PATH = "../data-set/stocks/MSFT.csv"
 
+# Define the path of sentimental analysis result
+# Negative / Positive
+AAPL_MOOD_PN = "../data-set/sentiments/AAPL-mood-pn.csv"
+GOOG_MOOD_PN = "../data-set/sentiments/GOOG-mood-pn.csv"
+MSFT_MOOD_PN = "../data-set/sentiments/MSFT-mood-pn.csv"
+# Multi-dimension
+AAPL_MOOD_MULTI = "../data-set/sentiments/AAPL-mood-multi.csv"
+GOOG_MOOD_MULTI = "../data-set/sentiments/GOOG-mood-multi.csv"
+MSFT_MOOD_MULTI = "../data-set/sentiments/MSFT-mood-multi.csv"
+
 
 #######################################################################
 # Apply z-score normalization
