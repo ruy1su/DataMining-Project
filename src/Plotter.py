@@ -10,11 +10,14 @@ import matplotlib.pyplot as plt
 
 class Plotter:
     @staticmethod
-    def plot(predict, real):
-        print(predict[:50])
-        print(real[:50])
-        # plt.xlabel('day')
-        # plt.ylabel('fluctuation')
-        # plt.plot(predict[:30], 'b', label='predict')
-        # plt.plot(real[:30], 'r', label='real')
-        # plt.show()
+    def plot(predict, real, num=50, print=False):
+        if num > len(predict):
+            num = len(predict)
+        if print:
+            print(predict[:num])
+            print(real[:num])
+        plt.xlabel('day')
+        plt.ylabel('fluctuation')
+        plt.plot(predict[:num], 'b', label='predict')
+        plt.plot(real[:num], 'r', label='real')
+        plt.show()

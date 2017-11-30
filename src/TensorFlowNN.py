@@ -15,7 +15,7 @@ class TensorFlowNN:
         self.hiddenLayers = hiddenLayers
         self.layerNodes = layerNodes
 
-    def train(self, X, Y, iterations=10000000):
+    def train(self, X, Y, iterations=50000):
         # X data (n, d)
         # Y data (n, 1)
         D = X.shape[1]         # dimension of each date point
@@ -78,18 +78,19 @@ def f(X):
 
 
 if __name__ == '__main__':
-    # if True:
-    #     X = np.random.rand(50, 10)
-    #     Y = f(X)
-    #     # Y += np.random.normal(-0.01, 0.01, Y.shape)     # add noise
-    #     nn = TensorFlowNN(stepSize=0.01, activation_function=tf.tanh, hiddenLayers=3, layerNodes=3)
-    #     nn.train(X, Y)
+    if True:
+        X = np.random.rand(30, 3)
+        Y = f(X)
+        # Y += np.random.normal(-0.01, 0.01, Y.shape)     # add noise
+        nn = TensorFlowNN(stepSize=0.01, activation_function=tf.tanh, hiddenLayers=2, layerNodes=2)
+        nn.train(X, Y)
 
-    extractor = fe.featureExtractor(0)
-    x, y, date = extractor.getFeature(5, 0)
-    nn1 = TensorFlowNN(stepSize=0.0001, activation_function=tf.tanh, hiddenLayers=1, layerNodes=2)
-    ts = tester.Tester(2)
-    ts.test(nn1, x, y, 0)
+    else:
+        extractor = fe.featureExtractor(0)
+        x, y, date = extractor.getFeature(5, 0)
+        nn1 = TensorFlowNN(stepSize=0.01, activation_function=tf.tanh, hiddenLayers=20, layerNodes=2)
+        ts = tester.Tester(2)
+        ts.test(nn1, x, y, 0)
 
 # iteration: 300k
 # step: 0.01 layers: 2  layerNodes: 2  err: 0.000237969
@@ -101,6 +102,10 @@ if __name__ == '__main__':
 # step: 0.1  layers: 4  layerNodes: 4  err: 0.000234041
 # step: 0.1  layers: 5  layerNodes: 5  err: 0.000203047
 # step: 0.1  layers: 10 layerNodes: 10 err: 0.000247254
+# step: 0.01 layers: 1  layerNodes: 50 err: 0.000247892
+# step: 0.01 layers: 2  layerNodes: 20 err: 0.000226958
+# step: 0.01 layers: 50 layerNodes: 1  err: 0.000266042
+# step: 0.01 layers: 20 layerNodes: 2  err: 0.000203621
 
 # iteration: 1000k
 # step: 0.0005 layers: 2  layerNodes: 5   err: 0.000277568
@@ -110,4 +115,13 @@ if __name__ == '__main__':
 # step: 0.001  layers: 1  layerNodes: 2   err: 0.000256699
 # step: 0.001  layers: 1  layerNodes: 5   err: 0.000205079
 # step: 0.001  layers: 1  layerNodes: 10  err: 0.000301821
+# step: 0.0005  layers: 2  layerNodes: 7  err: 0.000311183
+# step: 0.0005  layers: 3  layerNodes: 3  err: 0.000229741
+# step: 0.0005  layers: 3  layerNodes: 6  err: 0.000271247
+
+# iteration: 10000k
+# step: 0.001   layers: 2  layerNodes: 2  err: 0.000240726
+# step: 0.0001  layers: 2  layerNodes: 3  err: 0.00024662
+# step: 0.0005  layers: 3  layerNodes: 3  err: 0.000218282
+# step: 0.0005  layers: 2  layerNodes: 3  err: 0.000223182
 
