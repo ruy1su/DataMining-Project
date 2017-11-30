@@ -5,7 +5,7 @@ amiable
 amusing
 animated
 appealing
-as happy as a clam
+happy
 beaming
 beatific
 beautiful
@@ -22,6 +22,7 @@ cheery
 chipper
 chirpy
 content
+cool
 contented
 delight
 delighted
@@ -53,7 +54,6 @@ fulfilled
 fun
 funny
 genial
-get a kick out of
 glad
 gladden
 glee
@@ -71,8 +71,6 @@ gratifying
 great
 grinning
 happiness
-happy
-happy as a clam
 heartening
 heartwarming
 heavenly
