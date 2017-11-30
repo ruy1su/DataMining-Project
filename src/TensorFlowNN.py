@@ -72,10 +72,10 @@ if __name__ == '__main__':
     extractor = fe.featureExtractor(0)
     x, y, date = extractor.getFeature(5, 0)
 
-    nn1 = TensorFlowNN(stepSize=0.1, activation_function=tf.sigmoid, hiddenLayers=10, layerNodes=30)
+    nn1 = TensorFlowNN(stepSize=0.1, activation_function=tf.sigmoid, hiddenLayers=3, layerNodes=5)
     # nn2 = TensorFlowNN(stepSize=0.1, activation_function=tf.sigmoid, hiddenLayers=20, layerNodes=50)
     # nn3 = TensorFlowNN(stepSize=0.1, activation_function=tf.sigmoid, hiddenLayers=30, layerNodes=80)
-    ts = tester.Tester(5)
+    ts = tester.Tester(2)
     ts.test(nn1, x, y, 0)
     # ts.test(nn2, x, y, 0)
     # ts.test(nn3, x, y, 0)
