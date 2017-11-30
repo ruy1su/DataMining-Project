@@ -64,7 +64,7 @@ class featureExtractor(object):
         merged_vec = {'x'+str(i+1):[item[i] for item in merged_vec] for i in range(0, len(merged_vec[0]))}
         x = pd.DataFrame(merged_vec)
 
-        merged_label = {'y':[item[0] for item in merged_label]}
+        merged_label = {'y':[item[0] / 100.0 for item in merged_label]}
         y = pd.DataFrame(merged_label)
 
         merged_date = {'Date':[item[0] for item in merged_date]}

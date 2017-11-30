@@ -21,6 +21,7 @@ class TensorFlowNN:
         X, Y = X[:], Y[:]
         self.x = tf.placeholder(tf.float32, shape=(None, D))
         self.y = tf.placeholder(tf.float32, shape=(None, 1))
+        self.Y = Y
 
         # define layers
         assert(self.hiddenLayers > 0)
@@ -36,15 +37,19 @@ class TensorFlowNN:
         init = tf.global_variables_initializer()
         self.sess = tf.Session()
         self.sess.run(init)
+
+        print('----------------------------')
         for i in range(iterations):
-            self.sess.run(self.train_step, feed_dict={self.x: X, self.y: Y})
+            self.sess.run(self.train_step, feed_dict={self.x: X, self.y: self.Y})
+            if (i + 1) % 1000 == 0:
+                loss = self.sess.run(self.loss, feed_dict={self.x: X, self.y: self.Y})
+                print('iter: ' + str(int((i + 1)/1000)) + 'k | err: ' + str(loss))
+        print('----------------------------\n')
 
     def predict(self, X):
         predict = self.sess.run(self.output, feed_dict={self.x: X})
+        # print(self.Y.shape)
         return predict.ravel()
-        # loss = self.sess.run(self.loss, feed_dict={self.x: X, self.y: self.Y})
-        # print('out: ' + str(predict))
-        # print('err: ' + str(loss))
 
     # add one more layer and return the output of this layer
     def add_layer(self, inputs, in_size, out_size):
@@ -69,16 +74,17 @@ if __name__ == '__main__':
     # Y = f(X)
     # Y += np.random.normal(-0.01, 0.01, Y.shape)     # add noise
 
-    extractor = fe.featureExtractor(0)
-    x, y, date = extractor.getFeature(5, 0)
+    if True:
+        extractor = fe.featureExtractor(0)
+        x, y, date = extractor.getFeature(5, 0)
 
-    nn1 = TensorFlowNN(stepSize=0.1, activation_function=tf.sigmoid, hiddenLayers=3, layerNodes=5)
-    # nn2 = TensorFlowNN(stepSize=0.1, activation_function=tf.sigmoid, hiddenLayers=20, layerNodes=50)
-    # nn3 = TensorFlowNN(stepSize=0.1, activation_function=tf.sigmoid, hiddenLayers=30, layerNodes=80)
-    ts = tester.Tester(2)
-    ts.test(nn1, x, y, 0)
-    # ts.test(nn2, x, y, 0)
-    # ts.test(nn3, x, y, 0)
+        nn1 = TensorFlowNN(stepSize=0.1, activation_function=tf.sigmoid, hiddenLayers=3, layerNodes=5)
+        # nn2 = TensorFlowNN(stepSize=0.1, activation_function=tf.sigmoid, hiddenLayers=20, layerNodes=50)
+        # nn3 = TensorFlowNN(stepSize=0.1, activation_function=tf.sigmoid, hiddenLayers=30, layerNodes=80)
+        ts = tester.Tester(3)
+        ts.test(nn1, x, y, 0)
+        # ts.test(nn2, x, y, 0)
+        # ts.test(nn3, x, y, 0)
 
 
 

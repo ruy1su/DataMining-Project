@@ -3,6 +3,7 @@
 import pandas as pd
 import numpy as np
 
+from Plotter import Plotter
 import stockParser as sp
 import featureExtractor as fe
 import regression as reg
@@ -110,6 +111,8 @@ class Tester(object):
                 mse_sum += mse
 
                 print("MSE:", mse)
+                Plotter.plot(predicted_y, test_y)
+
             # classification measurement
             elif(mode == 1):
                 precision = utils.computePrecision(predicted_y, test_y)
