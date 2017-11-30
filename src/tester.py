@@ -111,7 +111,7 @@ class Tester(object):
                 mse_sum += mse
 
                 print("MSE:", mse)
-                Plotter.plot(predicted_y, test_y)
+                # Plotter.plot(predicted_y, test_y)
 
             # classification measurement
             elif(mode == 1):

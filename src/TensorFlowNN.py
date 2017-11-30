@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from Plotter import Plotter
 import tensorflow as tf
 import numpy as np
 import tester
@@ -44,6 +45,8 @@ class TensorFlowNN:
             if (i + 1) % 1000 == 0:
                 loss = self.sess.run(self.loss, feed_dict={self.x: X, self.y: self.Y})
                 print('iter: ' + str(int((i + 1)/1000)) + 'k | err: ' + str(loss))
+
+        Plotter.plot(self.predict(X), Y)
         print('----------------------------\n')
 
     def predict(self, X):
@@ -81,7 +84,7 @@ if __name__ == '__main__':
         nn1 = TensorFlowNN(stepSize=0.1, activation_function=tf.sigmoid, hiddenLayers=3, layerNodes=5)
         # nn2 = TensorFlowNN(stepSize=0.1, activation_function=tf.sigmoid, hiddenLayers=20, layerNodes=50)
         # nn3 = TensorFlowNN(stepSize=0.1, activation_function=tf.sigmoid, hiddenLayers=30, layerNodes=80)
-        ts = tester.Tester(3)
+        ts = tester.Tester(2)
         ts.test(nn1, x, y, 0)
         # ts.test(nn2, x, y, 0)
         # ts.test(nn3, x, y, 0)
