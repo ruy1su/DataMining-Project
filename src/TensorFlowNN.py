@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from Plotter import Plotter
 import tensorflow as tf
 import numpy as np
 import tester
+import utils
 import featureExtractor as fe
 
 
@@ -41,13 +41,16 @@ class TensorFlowNN:
 
         print('----------------------------------------')
         self.print_self_info()
+        prev = 0
         for i in range(iterations):
             self.sess.run(self.train_step, feed_dict={self.x: X, self.y:Y})
-            if (i + 1) % 10000 == 0:
+            if (i + 1) % 100 == 0:
                 loss = self.sess.run(self.loss, feed_dict={self.x: X, self.y: Y})
-                print('iter: ' + str(int((i + 1)/1000)) + 'k | err: ' + str(loss))
+                if abs(prev - loss) < 0.0001:
+                    break;
+                prev = loss
 
-        Plotter.plot(self.predict(X), Y)
+        utils.plot(self.predict(X), Y)
         print('----------------------------------------\n')
 
     def predict(self, X):
@@ -80,21 +83,29 @@ def f(X):
     X_beta = X.dot(beta)
     return X_beta / np.linalg.norm(X_beta)
 
+def random(n, m, noise=0):
+    X = np.random.rand(30, 2)
+    Y = f(X)
+    if 0 < noise < 1:
+        Y += np.random.normal(noise, noise, Y.shape)     # add noise
+    return (X, Y)
+    
+def foo(mode, x, y, hiddenLayers_, layerNodes_, activation_):
+    if mode:
+        nn = TensorFlowNN(stepSize=0.01, activation_function=activation_, hiddenLayers=hiddenLayers_, layerNodes=layerNodes_)
+        nn.train(x, y)
+    else:
+        nn = TensorFlowNN(stepSize=0.01, activation_function=activation_, hiddenLayers=hiddenLayers_, layerNodes=layerNodes_)
+        ts = tester.Tester(2)
+        ts.test(nn, x, y, 0)
 
 if __name__ == '__main__':
-    if True:
-        X = np.random.rand(300, 2)
-        Y = f(X)
-        # Y += np.random.normal(-0.5, 0.5, Y.shape)     # add noise
-        nn = TensorFlowNN(stepSize=0.01, activation_function=tf.tanh, hiddenLayers=2, layerNodes=2)
-        nn.train(X, Y)
+    X, Y = random(30, 2, 0.1)
+    foo(True, X, Y, 2, 2, tf.tanh)
 
-    else:
-        extractor = fe.featureExtractor(0)
-        x, y, date = extractor.getFeature(0, 1)
-        nn1 = TensorFlowNN(stepSize=0.01, activation_function=tf.tanh, hiddenLayers=30, layerNodes=30)
-        ts = tester.Tester(2)
-        ts.test(nn1, x[:100], y[:100], 2)
+    # extractor = fe.featureExtractor(0)
+    # x, y, date = extractor.getFeature(0, 1)
+    # foo(False, x, y, 2, 2, tf.tanh)
 
 # iteration: 300k
 # step: 0.01 layers: 2  layerNodes: 2  err: 2.37969e-4
