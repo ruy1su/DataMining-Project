@@ -3,7 +3,6 @@
 import pandas as pd
 import numpy as np
 
-from Plotter import Plotter
 import stockParser as sp
 import featureExtractor as fe
 import regression as reg

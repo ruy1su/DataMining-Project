@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 
 from sklearn import cross_validation
+import matplotlib.pyplot as plt
 
 # Define the path of stock record file 
 AAPL_PATH = "../data-set/stocks/AAPL.csv"
@@ -261,6 +262,24 @@ def nextDay(date="", year=0, month=0, day=0):
     year = year + 1 if (month == 1 and day == 1) else year
 
     return ("%04d-%02d-%02d" % (year, month, day))
+
+def plot(predict, real, num=50, print=False, classification=False):
+        if num > len(predict):
+            num = len(predict)
+        if print:
+            print(predict[:num])
+            print(real[:num])
+        if classification:
+            predict = plt.plot(utils.sign_list(predict[:num]), 'bo', label='predict')
+            real = plt.plot(utils.sign_list(real[:num]), 'ro', label='real')
+        else:
+            plt.plot(predict[:num], 'b', label='predict')
+            plt.plot(real[:num], 'r', label='real')
+
+        plt.xlabel('day')
+        plt.ylabel('fluctuation')
+        plt.legend(loc='best')
+        plt.show()
 
 
 def main():
