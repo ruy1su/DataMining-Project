@@ -192,7 +192,7 @@ def sign(vec):
 #       y.values: [[y1], [y2], [y3], ..., [yn]]
 #######################################################################
 def KfoldGenerator(x, y, k):
-    cv = cross_validation.KFold(len(x), n_folds = k, shuffle=True, random_state=None)
+    cv = cross_validation.KFold(len(x), n_folds = k, shuffle=False, random_state=None)
 
     ret_train_x, ret_train_y = [], []
     ret_test_x, ret_test_y = [], []
