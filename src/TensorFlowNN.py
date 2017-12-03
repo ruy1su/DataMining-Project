@@ -9,13 +9,14 @@ import featureExtractor as fe
 
 
 class TensorFlowNN:
-    def __init__(self, stepSize=0.1, activation_function=None, hiddenLayers=1, layerNodes=10):
+    def __init__(self, stepSize=0.1, activation_function=None, hiddenLayers=1, layerNodes=10, classification=False):
         self.stepSize = stepSize
         self.activation_function = activation_function
         self.hiddenLayers = hiddenLayers
         self.layerNodes = layerNodes
+        self.classification = classification
 
-    def train(self, X, Y, iterations=50000):
+    def train(self, X, Y, iterations=100000):
         # X data (n, d)
         # Y data (n, 1)
         D = X.shape[1]         # dimension of each date point
@@ -51,7 +52,10 @@ class TensorFlowNN:
 
     def predict(self, X):
         predict = self.sess.run(self.output, feed_dict={self.x: X})
-        return predict.ravel()
+        if self.classification:
+            return utils.sign(predict)
+        else:
+            return predict.ravel()
 
     # add one more layer and return the output of this layer
     def add_layer(self, inputs, in_size, out_size):
@@ -79,33 +83,34 @@ def f(X):
 
 if __name__ == '__main__':
     if True:
-        X = np.random.rand(30, 3)
+        X = np.random.rand(300, 2)
         Y = f(X)
-        # Y += np.random.normal(-0.01, 0.01, Y.shape)     # add noise
+        # Y += np.random.normal(-0.5, 0.5, Y.shape)     # add noise
         nn = TensorFlowNN(stepSize=0.01, activation_function=tf.tanh, hiddenLayers=2, layerNodes=2)
         nn.train(X, Y)
 
     else:
         extractor = fe.featureExtractor(0)
-        x, y, date = extractor.getFeature(5, 0)
-        nn1 = TensorFlowNN(stepSize=0.01, activation_function=tf.tanh, hiddenLayers=20, layerNodes=2)
+        x, y, date = extractor.getFeature(0, 1)
+        nn1 = TensorFlowNN(stepSize=0.01, activation_function=tf.tanh, hiddenLayers=30, layerNodes=30)
         ts = tester.Tester(2)
-        ts.test(nn1, x, y, 0)
+        ts.test(nn1, x[:100], y[:100], 2)
 
 # iteration: 300k
-# step: 0.01 layers: 2  layerNodes: 2  err: 0.000237969
-# step: 0.01 layers: 3  layerNodes: 3  err: 0.00024034
-# step: 0.01 layers: 4  layerNodes: 4  err: 0.000227995
-# step: 0.01 layers: 5  layerNodes: 5  err: 0.000229507
-# step: 0.1  layers: 2  layerNodes: 2  err: 0.000208698
-# step: 0.1  layers: 3  layerNodes: 3  err: 0.000210886
-# step: 0.1  layers: 4  layerNodes: 4  err: 0.000234041
-# step: 0.1  layers: 5  layerNodes: 5  err: 0.000203047
-# step: 0.1  layers: 10 layerNodes: 10 err: 0.000247254
-# step: 0.01 layers: 1  layerNodes: 50 err: 0.000247892
-# step: 0.01 layers: 2  layerNodes: 20 err: 0.000226958
-# step: 0.01 layers: 50 layerNodes: 1  err: 0.000266042
-# step: 0.01 layers: 20 layerNodes: 2  err: 0.000203621
+# step: 0.01 layers: 2  layerNodes: 2  err: 2.37969e-4
+# step: 0.01 layers: 3  layerNodes: 3  err: 2.4034e-4
+# step: 0.01 layers: 4  layerNodes: 4  err: 2.27995e-4
+# step: 0.01 layers: 5  layerNodes: 5  err: 2.29507e-4
+# step: 0.01 layers: 1  layerNodes: 50 err: 2.47892e-4
+# step: 0.01 layers: 50 layerNodes: 1  err: 2.66042e-4
+# step: 0.01 layers: 2  layerNodes: 20 err: 2.26958e-4
+# step: 0.01 layers: 20 layerNodes: 2  err: 2.03621e-4
+
+# step: 0.1  layers: 2  layerNodes: 2  err: 2.08698e-4
+# step: 0.1  layers: 3  layerNodes: 3  err: 2.10886e-4
+# step: 0.1  layers: 4  layerNodes: 4  err: 2.34041e-4
+# step: 0.1  layers: 5  layerNodes: 5  err: 2.03047e-4
+# step: 0.1  layers: 10 layerNodes: 10 err: 2.47254e-4
 
 # iteration: 1000k
 # step: 0.0005 layers: 2  layerNodes: 5   err: 0.000277568

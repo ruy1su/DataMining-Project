@@ -110,8 +110,10 @@ class Tester(object):
                 mse = utils.computeMSE(predicted_y, test_y)
                 mse_sum += mse
 
+                # print("Predict_y", predicted_y);
+                # print("Test_y", test_y);
+
                 print("MSE:", mse)
-                # Plotter.plot(predicted_y, test_y)
 
             # classification measurement
             elif(mode == 1):
@@ -126,6 +128,9 @@ class Tester(object):
                 print("Precision:", precision)
                 print("Recall:", recall)
                 print("Accuracy:", accuracy)
+
+            print (test_y[:20], predicted_y[:20])
+            Plotter.plot(predicted_y, test_y)
 
         # print out average
         print("%s%s%s" % ("*", "Average", "*"))
