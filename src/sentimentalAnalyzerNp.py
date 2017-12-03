@@ -6,8 +6,8 @@ import re
 from datetime import datetime
 
 class sentimentAnalyzerOneDim:
-    
-    def analyze(self, folders, mode):
+    mode = 0 #default
+    def analyze(self, folders):
         #folders = ['AAPL', 'GOOG', 'MSFT']
         if mode == 0:
             for folder in folders:
