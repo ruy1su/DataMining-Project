@@ -103,5 +103,9 @@ class sentimentAnalyzerOneDim:
 if __name__ == '__main__':
     sentimentAnalyzer = sentimentAnalyzerOneDim()
     folders = ['AAPL', 'GOOG', 'MSFT']
-    assert (sys.argv[1]==0 || sys.argv[1]==1)
+    print sys.argv[1]
+    assert(sys.argv[1]!=None)
+    mode = int (sys.argv[1])
+    if (mode!=0 and mode!=1):
+        print "Usage: Arguement of 0 for TextBlob sentiment analysis and 1 for positve-negative word count analysis. "
     sentimentAnalyzer.analyze(folders, mode)
