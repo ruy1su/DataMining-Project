@@ -159,6 +159,9 @@ def sign(vec):
 
     return new_vec
 
+def sign_list(arr):
+    return list(map(lambda x: 1 if x >= 0 else 0, arr))
+
 
 #######################################################################
 # K-Fold Dataset Generator
@@ -192,7 +195,7 @@ def sign(vec):
 #       y.values: [[y1], [y2], [y3], ..., [yn]]
 #######################################################################
 def KfoldGenerator(x, y, k):
-    cv = cross_validation.KFold(len(x), n_folds = k, shuffle=True, random_state=None)
+    cv = cross_validation.KFold(len(x), n_folds = k, shuffle=False, random_state=None)
 
     ret_train_x, ret_train_y = [], []
     ret_test_x, ret_test_y = [], []
