@@ -102,4 +102,6 @@ class sentimentAnalyzerOneDim:
 
 if __name__ == '__main__':
     sentimentAnalyzer = sentimentAnalyzerOneDim()
-    sentimentAnalyzer.analyze(['AAPL'], 1)
+    folders = ['AAPL', 'GOOG', 'MSFT']
+    assert (sys.argv[1]==0 || sys.argv[1]==1)
+    sentimentAnalyzer.analyze(folders, mode)
