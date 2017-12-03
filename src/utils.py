@@ -159,6 +159,9 @@ def sign(vec):
 
     return new_vec
 
+def sign_list(arr):
+    return list(map(lambda x: 1 if x >= 0 else 0, arr))
+
 
 #######################################################################
 # K-Fold Dataset Generator
