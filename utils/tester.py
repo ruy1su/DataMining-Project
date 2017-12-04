@@ -129,7 +129,7 @@ class Tester(object):
                 print("Accuracy:", accuracy)
 
             print (test_y[:20], predicted_y[:20])
-            Plotter.plot(predicted_y, test_y)
+            # tools.plot(predicted_y, test_y)
 
         # print out average
         print("%s%s%s" % ("*", "Average", "*"))

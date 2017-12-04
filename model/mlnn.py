@@ -28,7 +28,7 @@ class MLNN(object):
         self.hidden_layers_ = hidden_layers
         self.zscore_ = zscore
 
-        self.model_ = MLPRegressor(solver='lbfgs', alpha=1e-5, activation='logistic',
+        self.model_ = MLPClassifier(solver='lbfgs', alpha=1e-5, activation='logistic',
             hidden_layer_sizes=self.hidden_layers_, random_state=1)
 
     #######################################################################
