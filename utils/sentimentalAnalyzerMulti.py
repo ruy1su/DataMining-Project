@@ -20,14 +20,14 @@ class sentimentAnalyzerMultiDims:
     todayDate = '2010/01/01' #default
 
     def read(self):
-    	self.readFromPath('AAPL/')
-    	self.readFromPath('GOOG/')
-    	self.readFromPath('MSFT/')
+        self.readFromPath('AAPL/')
+        self.readFromPath('GOOG/')
+        self.readFromPath('MSFT/')
 
     def readFromPath(self,dirStr):
-        print 'Company',dirStr
-    	dirStrWoSlash = dirStr[:-1]
-    	defaultDir = '../data-set/tweets/'
+        print ('Company',dirStr)
+        dirStrWoSlash = dirStr[:-1]
+        defaultDir = '../data-set/tweets/'
         if self.days < 100:
             for fle in os.listdir(defaultDir + dirStr):
                 #Getting date
@@ -46,7 +46,7 @@ class sentimentAnalyzerMultiDims:
                 elif mode == 2:#Using Indicoio
                     fout.write('date,alert,happy,sad,surprise\n')
                 for fle in os.listdir(defaultDir + dirStr):
-        			#Getting date
+                    #Getting date
                     match =  re.search(r'\d{4}-\d{2}-\d{2}', fle)
                     date = datetime.strptime(match.group(), '%Y-%m-%d').date()
                     self.todayDate = str(date)
@@ -55,18 +55,22 @@ class sentimentAnalyzerMultiDims:
                     sentDim = self.getTwt(openPath)
                     # print (sentDim,'sentDim')
                     fout.write('%s,%s,%s,%s,%s\n' % (str(date), sentDim[0], sentDim[1], sentDim[2], sentDim[3]))
-        	fout.close()	
+            fout.close()    
 
     def getTwt(self,openPath):
 
         with codecs.open(openPath,"r",encoding='utf-8', errors='ignore') as fin:
             twts = []
             firstline = True
+            looptime = 0
             for line in fin:
-            	#skip 1st line
-            	if firstline:    
-            		firstline = False
-            	else:
+                #skip 1st line
+                if looptime > self.days:
+                    break
+                looptime += 1 
+                if firstline:    
+                    firstline = False
+                else:
                     # ls = unicode(line, errors='replace')                     #Only read english sentences
                     # ls = line.decode('ascii', errors="replace")
                     ls = line.rstrip().split(';')
@@ -75,7 +79,7 @@ class sentimentAnalyzerMultiDims:
                     else:
                         twt = ls[2]
                         twts.append(twt)
-            # print (twts)
+            # print (len(twts),'length')
         if self.mode == 0:
             return self.sentimentAnalyzer(twts)
         elif self.mode == 1:
@@ -83,7 +87,7 @@ class sentimentAnalyzerMultiDims:
         elif self.mode == 2:
             return self.sentimentAnalyzerUsingIndicoio(twts)
         else:
-            print "\n--------Wrong Arguements: sentimental mode should be 0,1 or 2-------\n"
+            print ("\n--------Wrong Arguements: sentimental mode should be 0,1 or 2-------\n")
 
     def sentimentAnalyzerUsingWordList(self,twts):      
         sentDim = {'Alert':0, 'Happy':0, 'Calm':0, 'Kind':0}
@@ -116,8 +120,8 @@ class sentimentAnalyzerMultiDims:
                 # else:
                 #     sentDim['Calm']+=1
         sumAll = sentDim['Alert'] + sentDim['Happy'] + sentDim['Calm'] + sentDim['Kind']
-        print '\nalert happy calm kind'
-        print sentDim['Alert'],sentDim['Happy'],sentDim['Calm'],sentDim['Kind']
+        print ('\nalert happy calm kind')
+        print (sentDim['Alert'],sentDim['Happy'],sentDim['Calm'],sentDim['Kind'])
         if sumAll == 0:
             return [0.5,0.5,0.5,0.5]
         sentiment4OneDay4OneCom.append(sentDim['Alert'] / float(sumAll) )   
@@ -161,25 +165,26 @@ class sentimentAnalyzerMultiDims:
             for k in ss:
                 # print('{0}: {1}, '.format(sentDim[k], ss[k]))
                 if sentDim[k] == 'Alert':
-                	sentimentAlert.append(ss[k])
+                    sentimentAlert.append(ss[k])
                 if sentDim[k] == 'Calm':
                     if ss[k] == 1:
                         sentimentCalm.append(0)
                     else:
-                    	sentimentCalm.append(ss[k])
+                        sentimentCalm.append(ss[k])
                 if sentDim[k] == 'compound':
-                	sentimentCompound.append(ss[k])
+                    sentimentCompound.append(ss[k])
                 if sentDim[k] == 'Happy':
-               		sentimentHappy.append(ss[k])
-        print '\nalert happy calm compound'
-        sentiment4OneDay4OneCom.append(sum(sentimentAlert) / float(len(sentimentAlert)))	
+                    sentimentHappy.append(ss[k])
+        print ('\nalert happy calm compound')
+        sentiment4OneDay4OneCom.append(sum(sentimentAlert) / float(len(sentimentAlert)))    
         sentiment4OneDay4OneCom.append(sum(sentimentHappy) / float(len(sentimentHappy)))
         sentiment4OneDay4OneCom.append(sum(sentimentCalm) / float(len(sentimentCalm)))
         sentiment4OneDay4OneCom.append(sum(sentimentCompound) / float(len(sentimentCompound)))
-        print (sentiment4OneDay4OneCom)
+        print (sentiment4OneDay4OneCom, self.todayDate)
         return sentiment4OneDay4OneCom
 
     def sentimentAnalyzerUsingIndicoio(self, twts):
+        print ('loading....')
         sentDim = {'anger':'Alert','joy':'Happy', 'sadness':'Sad','fear':'Fear', 'surprise':'Surprise'}
         
         sentiment4OneDay4OneCom = []
@@ -197,14 +202,14 @@ class sentimentAnalyzerMultiDims:
             sentence = HTMLParser.HTMLParser().unescape(sentence)                            # unescape HTML
             sentence = re.sub(r"http\S+", "", sentence)                   # remove normal URLS
             sentence = re.sub(r"pic\.twitter\.com/\S+", "", sentence)     # remove pic.twitter.com URLS
-            print(sentence+'\n')
+            # print(sentence+'\n')
             i = 0
             sums+=1
             ss = indicoio.emotion(sentence)
-            print (ss,sums, 'out of 1000')
+            # print (ss,sums, 'out of 1000')
             for k in ss:
-                print (k)
-                print('{0}: {1}, '.format(sentDim[k], ss[k]))
+                # print (k)
+                # print('{0}: {1}, '.format(sentDim[k], ss[k]))
                 if sentDim[k] == 'Alert':
                     sentimentAlert.append(ss[k])
                 if sentDim[k] == 'Happy':
@@ -214,12 +219,12 @@ class sentimentAnalyzerMultiDims:
                 if sentDim[k] == 'Surprise':
                     sentimentSurprise.append(ss[k])
         # print (sentimentHappy)
-        print '\nalert happy sad surprise'
+        print ('\nalert happy sad surprise')
         sentiment4OneDay4OneCom.append(sum(sentimentAlert) / float(len(sentimentAlert)))    
         sentiment4OneDay4OneCom.append(sum(sentimentHappy) / float(len(sentimentHappy)))
         sentiment4OneDay4OneCom.append(sum(sentimentSurprise) / float(len(sentimentSurprise)))
         sentiment4OneDay4OneCom.append(sum(sentimentSad) / float(len(sentimentSad)))
-        print (sentiment4OneDay4OneCom)
+        print (sentiment4OneDay4OneCom, self.todayDate)
         return sentiment4OneDay4OneCom
 
 if __name__ == '__main__':
@@ -227,8 +232,9 @@ if __name__ == '__main__':
     assert(sys.argv[1]!='')
     sent = sentimentAnalyzerMultiDims()
     sent.mode = int(sys.argv[1])
+    print ('Mode Selection: 0 for Vader, 1 for WordList, 2 for Indicoio(not recommended, cost too much time)')
     if len(sys.argv) < 3:
-        print 'If you want to test, please give how many dates(less than 100) you want to analyze, otherwise we will run all the data\n'
+        print ('If you want to test, please give how many dates(less than 100) you want to analyze, otherwise we will run all the data\n')
     else:
         sent.days = int(sys.argv[2])
     sent.read()
