@@ -7,7 +7,8 @@ from datetime import datetime
 
 class sentimentAnalyzerOneDim:
     
-    def analyze(self, folders, mode, numDays):
+    def analyze(self, mode, numDays):
+        folders = ['AAPL', 'GOOG', 'MSFT']
         if (numDays==0):
             if mode == 0:
                 for folder in folders:
@@ -190,7 +191,7 @@ class sentimentAnalyzerOneDim:
 
 if __name__ == '__main__':
     sentimentAnalyzer = sentimentAnalyzerOneDim()
-    folders = ['AAPL', 'GOOG', 'MSFT']
+    #folders = ['AAPL', 'GOOG', 'MSFT']
     assert(sys.argv[1]!=None)
     mode = int (sys.argv[1])
     if (mode!=0 and mode!=1):
@@ -200,4 +201,5 @@ if __name__ == '__main__':
         numDays = 0
     else:
         numDays = int(sys.argv[2])
-    sentimentAnalyzer.analyze(folders, mode, numDays)
+    #sentimentAnalyzer.analyze(folders, mode, numDays)
+    sentimentAnalyzer.analyze(mode, numDays)
