@@ -10,12 +10,13 @@ from utils import featureExtractor as fe
 
 
 class TensorFlowNN:
-    def __init__(self, stepSize=0.1, activation_function=None, hiddenLayers=1, layerNodes=10, classification=False):
+    def __init__(self, stepSize=0.1, activation_function=None, hiddenLayers=1, layerNodes=10, classification=False, plot=False):
         self.stepSize = stepSize
         self.activation_function = activation_function
         self.hiddenLayers = hiddenLayers
         self.layerNodes = layerNodes
         self.classification = classification
+        self.plot = plot
 
     def train(self, X, Y, iterations=100000):
         # X data (n, d)
@@ -40,19 +41,19 @@ class TensorFlowNN:
         self.sess = tf.Session()
         self.sess.run(init)
 
-        print('----------------------------------------')
-        self.print_self_info()
+        # print('----------------------------------------')
+        # self.print_self_info()
         prev = 0
         for i in range(iterations):
             self.sess.run(self.train_step, feed_dict={self.x: X, self.y:Y})
             if (i + 1) % 100 == 0:
                 loss = self.sess.run(self.loss, feed_dict={self.x: X, self.y: Y})
-                if abs(prev - loss) < 0.0001:
+                if abs(prev - loss) < 0.00001:
                     break;
                 prev = loss
-
-        tools.plot(self.predict(X), Y)
-        print('----------------------------------------\n')
+        if self.plot:
+            tools.plot(self.predict(X), Y)
+        # print('----------------------------------------\n')
 
     def predict(self, X):
         predict = self.sess.run(self.output, feed_dict={self.x: X})
@@ -79,33 +80,10 @@ class TensorFlowNN:
           + ' activation: ' + str(self.activation_function))
 
 
-def f(X):
-    beta = np.random.rand(X.shape[1], 1)
-    X_beta = X.dot(beta)
-    return X_beta / np.linalg.norm(X_beta)
 
-def random(n, m, noise=0):
-    X = np.random.rand(30, 2)
-    Y = f(X)
-    if 0 < noise < 1:
-        Y += np.random.normal(noise, noise, Y.shape)     # add noise
-    return (X, Y)
     
-def foo(mode, x, y, hiddenLayers_, layerNodes_, activation_):
-    if mode:
-        nn = TensorFlowNN(stepSize=0.01, activation_function=activation_, hiddenLayers=hiddenLayers_, layerNodes=layerNodes_)
-        nn.train(x, y)
-    else:
-        nn = TensorFlowNN(stepSize=0.01, activation_function=activation_, hiddenLayers=hiddenLayers_, layerNodes=layerNodes_)
-        ts = tester.Tester(2)
-        ts.test(nn, x, y, 0)
 
-if __name__ == '__main__':
-    X, Y = random(30, 2, 0.1)
-    foo(True, X, Y, 2, 2, tf.tanh)
 
-    # extractor = fe.featureExtractor(0)
-    # x, y, date = extractor.getFeature(0, 1)
     # foo(False, x, y, 2, 2, tf.tanh)
 
 # iteration: 300k

@@ -5,10 +5,11 @@ import numpy as np
 
 from utils import stockParser as sp
 from utils import featureExtractor as fe
+from utils import tools
 from model import regression as reg
 from model import svm
 from model import mlnn
-from utils import tools
+from model.TensorFlowNN import TensorFlowNN
 
 # define companies here
 TEST_COMPANY = ["Google", "Apple", "Microsoft"]
@@ -128,7 +129,7 @@ class Tester(object):
                 print("Recall:", recall)
                 print("Accuracy:", accuracy)
 
-            print (test_y[:20], predicted_y[:20])
+            # print (test_y[:20], predicted_y[:20])
             # tools.plot(predicted_y, test_y)
 
         # print out average
@@ -179,6 +180,45 @@ class Tester(object):
             print("# Neural Network Tester with " + TEST_COMPANY[i])
             self.test(model_nn, x, discrete_y, 1)
             print("-" * 60)
+
+
+
+    def f(self, X):
+        beta = np.random.rand(X.shape[1], 1)
+        X_beta = X.dot(beta)
+        return X_beta / np.linalg.norm(X_beta)
+
+    def random(self, n, m, noise=0):
+        X = np.random.rand(30, 2)
+        Y = self.f(X)
+        if 0 < noise < 1:
+            Y += np.random.normal(noise, noise, Y.shape)     # add noise
+        return (X, Y)
+
+    def testTensorFlowRandom(self, stepSize, hiddenLayers, layerNodes, activation_function):
+        print('########## tesing tensorflow regression with random data ##########')
+        print('stepSize: ' + str(stepSize))
+        print('hiddenLayers: ' + str(hiddenLayers))
+        print('layerNodes: ' + str(layerNodes))
+        print('activation_function: ' + str(activation_function))
+        X, Y = self.random(30, 2, 0)
+        nn = TensorFlowNN(stepSize, activation_function, hiddenLayers, layerNodes)
+        nn.train(X, Y)
+        mse = tools.computeMSE(nn.predict(X), Y.ravel())
+        print('training MSE: ' + str(mse))
+
+    def testTensorFlow(self, stepSize, hiddenLayers, layerNodes, activation_function, fluc=5, sentiment=0):        
+        print('########## tesing tensorflow regression ##########')
+        print('stepSize: ' + str(stepSize))
+        print('hiddenLayers: ' + str(hiddenLayers))
+        print('layerNodes: ' + str(layerNodes))
+        print('activation_function: ' + str(activation_function))
+        nn = TensorFlowNN(stepSize, activation_function, hiddenLayers, layerNodes)
+        for i in range(0, len(TEST_COMPANY)):
+            print("# TensorFlowNN Tester with " + TEST_COMPANY[i])
+            extractor = fe.featureExtractor(i)
+            x, y, date = extractor.getFeature(fluc, sentiment)
+            self.test(nn, x, y, 0)
 
 def main():
     tester = Tester(5)
