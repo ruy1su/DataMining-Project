@@ -226,11 +226,15 @@ class Tester(object):
 
             # Test TensorFlow Neural Network
             print("# TensorFlow Neural Network Tester with " + TEST_COMPANY[i])
-            
+
             model.train(x, y)
             # predicted_y: [y1, y2, y3, ..., yn]
             predicted_y = model.predict(x)
-            tools.plot(predicted_y, y.values.ravel())
+
+            # plot the result
+            msg = "Fluctuation: " + str(fluc) + "-day, Sentiment: " + \
+                str(sentiment) + ", Dataset: " + str(data_set_size)
+            tools.plot(predicted_y, y.values.ravel(), msg)
 
             # computeMSE need input params in excatly same dimension
             # Here both predicted_y and test_y.values.ravel() is a
