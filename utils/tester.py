@@ -12,7 +12,8 @@ from model import mlnn
 from model.TensorFlowNN import TensorFlowNN
 
 # define companies here
-TEST_COMPANY = ["Google", "Apple", "Microsoft"]
+# TEST_COMPANY = ["Google", "Apple", "Microsoft"]
+TEST_COMPANY = ["Google"]
 
 class Tester(object):
     #######################################################################
@@ -181,27 +182,13 @@ class Tester(object):
             self.test(model_nn, x, discrete_y, 1)
             print("-" * 60)
 
-
-
-    def f(self, X):
-        beta = np.random.rand(X.shape[1], 1)
-        X_beta = X.dot(beta)
-        return X_beta / np.linalg.norm(X_beta)
-
-    def random(self, n, m, noise=0):
-        X = np.random.rand(30, 2)
-        Y = self.f(X)
-        if 0 < noise < 1:
-            Y += np.random.normal(noise, noise, Y.shape)     # add noise
-        return (X, Y)
-
     def testTensorFlowRandom(self, stepSize, hiddenLayers, layerNodes, activation_function):
         print('########## tesing tensorflow regression with random data ##########')
         print('stepSize: ' + str(stepSize))
         print('hiddenLayers: ' + str(hiddenLayers))
         print('layerNodes: ' + str(layerNodes))
         print('activation_function: ' + str(activation_function))
-        X, Y = self.random(30, 2, 0)
+        X, Y = random(30, 2, 0)
         nn = TensorFlowNN(stepSize, activation_function, hiddenLayers, layerNodes)
         nn.train(X, Y)
         mse = tools.computeMSE(nn.predict(X), Y.ravel())
@@ -219,6 +206,18 @@ class Tester(object):
             extractor = fe.featureExtractor(i)
             x, y, date = extractor.getFeature(fluc, sentiment)
             self.test(nn, x, y, 0)
+
+def f(X):
+        beta = np.random.rand(X.shape[1], 1)
+        X_beta = X.dot(beta)
+        return X_beta / np.linalg.norm(X_beta)
+
+def random(n, m, noise=0):
+    X = np.random.rand(30, 2)
+    Y = f(X)
+    if 0 < noise < 1:
+        Y += np.random.normal(noise, noise, Y.shape)     # add noise
+    return (X, Y)
 
 def main():
     tester = Tester(5)
