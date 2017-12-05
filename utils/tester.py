@@ -152,7 +152,8 @@ class Tester(object):
     #
     # Input:
     #   fluc: integer, length of stock fluctuation vector
-    #   sentiment: integer, specify sentiment vector (TBD) 
+    #   sentiment: integer, specify sentiment vector [0: pn, 1: multi]
+    #   data_set_size: limit the size of dataset
     #######################################################################
     def testAllModels(self, fluc=5, sentiment=1, data_set_size=0):
         # linear regression model
@@ -195,6 +196,47 @@ class Tester(object):
             print("# Neural Network Tester with " + TEST_COMPANY[i])
             self.test(model_nn, x, discrete_y, 1)
             print("-" * 60)
+
+    #######################################################################
+    # Single Model Tester
+    #
+    # This function will test single model with every dataset (AAPL, GOOG, MSFT)
+    # Note: In this function, we do not adopt K-Folds
+    #
+    # Input:
+    #   fluc: integer, length of stock fluctuation vector
+    #   sentiment: integer, specify sentiment vector [0: pn, 1: multi]
+    #   data_set_size: limit the size of dataset
+    #######################################################################
+    def testSingleModel(self, fluc=5, sentiment=1, data_set_size=0):
+        # linear regression model
+        model = TensorFlowNN(0.01, tf.tanh, 2, 2)
+        
+        for i in range(0, len(TEST_COMPANY)):
+            # create feature extractor for current company
+            extractor = fe.featureExtractor(i)
+
+            # get features, label and corresponding date
+            x, y, date = extractor.getFeature(fluc, sentiment)
+
+            # set dataset size
+            data_set_size = min(data_set_size, x.shape[0]) if data_set_size else x.shape[0]
+            x = x[:data_set_size]
+            y = y[:data_set_size]
+
+            # Test TensorFlow Neural Network
+            print("# TensorFlow Neural Network Tester with " + TEST_COMPANY[i])
+            
+            model.train(x, y)
+            # predicted_y: [y1, y2, y3, ..., yn]
+            predicted_y = model.predict(x)
+            tools.plot(predicted_y, y.values.ravel())
+
+            # computeMSE need input params in excatly same dimension
+            # Here both predicted_y and test_y.values.ravel() is a
+            # n-dimension vector [y1, y2, ..., yn]
+            mse = tools.computeMSE(predicted_y, y.values.ravel())
+            print("MSE:", mse)
 
     def testTensorFlowRandom(self, stepSize, hiddenLayers, layerNodes, activation_function):
         print('########## tesing tensorflow regression with random data ##########')
