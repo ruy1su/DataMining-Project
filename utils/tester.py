@@ -2,6 +2,7 @@
 
 import pandas as pd
 import numpy as np
+import tensorflow as tf
 
 from utils import stockParser as sp
 from utils import featureExtractor as fe
@@ -152,11 +153,12 @@ class Tester(object):
     #   fluc: integer, length of stock fluctuation vector
     #   sentiment: integer, specify sentiment vector (TBD) 
     #######################################################################
-    def testAll(self, fluc=5, sentiment=0):
+    def testAllModels(self, fluc=5, sentiment=1, data_set_size=0):
         # linear regression model
         model_lreg = reg.regressionModel(0, gradient_type=0, zscore=True)
         model_svm = svm.SVM(1, zscore=True)
         model_nn = mlnn.MLNN(hidden_layers=(5,), zscore=True)
+        model_tfnn = TensorFlowNN(0.01, tf.tanh, 2, 2)
         
         for i in range(0, len(TEST_COMPANY)):
             # create feature extractor for current company
@@ -164,12 +166,23 @@ class Tester(object):
 
             # get features, label and corresponding date
             x, y, date = extractor.getFeature(fluc, sentiment)
+
+            # set dataset size
+            data_set_size = min(data_set_size, x.shape[0]) if data_set_size else x.shape[0]
+            x = x[:data_set_size]
+            y = y[:data_set_size]
+
             # convert numerical label into discrete value for classifier
             discrete_y = tools.sign(y)
 
             # Test Linear Regression
             print("# Linear Regression Tester with " + TEST_COMPANY[i])
             self.test(model_lreg, x, y, 0)
+            print("-" * 60)
+
+            # Test TensorFlow Neural Network
+            print("# TensorFlow Neural Network Tester with " + TEST_COMPANY[i])
+            self.test(model_tfnn, x, y, 0)
             print("-" * 60)
 
             # Test SVM
