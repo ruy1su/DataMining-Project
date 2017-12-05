@@ -263,12 +263,10 @@ def nextDay(date="", year=0, month=0, day=0):
 
     return ("%04d-%02d-%02d" % (year, month, day))
 
-def plot(predict, real, num=50, print=False, classification=False):
+def plot(predict, real, title = "", num = 50, print = False, classification = False):
         if num > len(predict):
             num = len(predict)
-        if print:
-            print(predict[:num])
-            print(real[:num])
+        
         if classification:
             predict = plt.plot(utils.sign_list(predict[:num]), 'bo', label='predict')
             real = plt.plot(utils.sign_list(real[:num]), 'ro', label='real')
@@ -276,9 +274,11 @@ def plot(predict, real, num=50, print=False, classification=False):
             plt.plot(predict[:num], 'b', label='predict')
             plt.plot(real[:num], 'r', label='real')
 
+        plt.title(title)
         plt.xlabel('day')
         plt.ylabel('fluctuation')
         plt.legend(loc='best')
+        
         plt.show()
 
 

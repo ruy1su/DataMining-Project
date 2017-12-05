@@ -53,7 +53,7 @@ class Tester(object):
     #       0 - regression testing
     #       1 - classifier testing
     #############################################################
-    def test(self, model, x, y, mode):
+    def test(self, model, x, y, mode, msg=""):
         predicted_y_set = []
         test_y_set = []
 
@@ -72,7 +72,7 @@ class Tester(object):
             test_y_set.append(test_y.values.ravel())
 
         # measure the prediction results
-        self.measure(predicted_y_set, test_y_set, mode)
+        self.measure(predicted_y_set, test_y_set, mode, msg)
 
 
     #######################################################################
@@ -97,7 +97,7 @@ class Tester(object):
     #       0 - regression testing
     #       1 - classifier testing
     #######################################################################
-    def measure(self, predicted_ys, test_ys, mode):
+    def measure(self, predicted_ys, test_ys, mode, msg=""):
         mse_sum, pre_sum, recall_sum, acc_sum, cnt = 0, 0, 0, 0, 1
 
         for predicted_y, test_y in zip(predicted_ys, test_ys):
@@ -106,14 +106,15 @@ class Tester(object):
 
             # regression measurement
             if(mode == 0):
+                # plot predicted_y and test_y curve
+                title = msg + " " + str(cnt - 1) + "-Fold"
+                tools.plot(predicted_y, test_y, title)
+
                 # computeMSE need input params in excatly same dimension
                 # Here both predicted_y and test_y.values.ravel() is a
                 # n-dimension vector [y1, y2, ..., yn]
                 mse = tools.computeMSE(predicted_y, test_y)
                 mse_sum += mse
-
-                # print("Predict_y", predicted_y);
-                # print("Test_y", test_y);
 
                 print("MSE:", mse)
 
@@ -177,12 +178,12 @@ class Tester(object):
 
             # Test Linear Regression
             print("# Linear Regression Tester with " + TEST_COMPANY[i])
-            self.test(model_lreg, x, y, 0)
+            self.test(model_lreg, x, y, 0, "Linear Regression")
             print("-" * 60)
 
             # Test TensorFlow Neural Network
             print("# TensorFlow Neural Network Tester with " + TEST_COMPANY[i])
-            self.test(model_tfnn, x, y, 0)
+            self.test(model_tfnn, x, y, 0, "TensorFlow Neural Network")
             print("-" * 60)
 
             # Test SVM
