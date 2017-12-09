@@ -1,3 +1,5 @@
+# reference from https://github.com/Jefferson-Henrique/GetOldTweets-python
+
 class TweetCriteria:
 	
 	def __init__(self):

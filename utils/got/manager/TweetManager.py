@@ -1,3 +1,5 @@
+# reference from https://github.com/Jefferson-Henrique/GetOldTweets-python
+
 import urllib,urllib2,json,re,datetime,sys,cookielib
 from .. import models
 from pyquery import PyQuery
