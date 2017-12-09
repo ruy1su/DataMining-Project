@@ -209,6 +209,16 @@ class Tester(object):
     #   data_set_size: limit the size of dataset
     #######################################################################
     def testSingleModel(self, fluc=5, sentiment=1, data_set_size=0):
+        sentimentals = {
+            0: 'positive/negative',
+            1: 'multiple moods',
+            2: 'N/A',
+            3: 'N/A',
+            4: 'N/A' 
+        }
+        print("-" * 60)
+        print("{}-day fluctuation, sentimental analysis {}".format(fluc, sentimentals[sentiment]))
+
         # linear regression model
         model = TensorFlowNN(0.01, tf.tanh, 2, 2)
         
@@ -234,7 +244,7 @@ class Tester(object):
             # plot the result
             msg = "Fluctuation: " + str(fluc) + "-day, Sentiment: " + \
                 str(sentiment) + ", Dataset: " + str(data_set_size)
-            tools.plot(predicted_y, y.values.ravel(), msg)
+            # tools.plot(predicted_y, y.values.ravel(), msg)
 
             # computeMSE need input params in excatly same dimension
             # Here both predicted_y and test_y.values.ravel() is a

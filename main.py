@@ -7,8 +7,8 @@ import numpy as np
 import tensorflow as tf
 
 tf = False
-TEST_ALL_MODEL = False
-FEATURE_COMPARISON = True
+TEST_ALL_MODEL = True
+FEATURE_COMPARISON = False
 DATA_SET_SIZE_TEST = False
 
 from utils import tester
@@ -29,30 +29,15 @@ def main():
     if(FEATURE_COMPARISON):
         data_set_size = 180
 
-        print("-" * 60)
-        print("1-day fluctuation, sentimental analysis positive/negative")
+        ts.testSingleModel(0, 0, data_set_size)
         ts.testSingleModel(1, 0, data_set_size)
-        print("-" * 60)
-
-        print("3-day fluctuation, sentimental analysis positive/negative")
         ts.testSingleModel(3, 0, data_set_size)
-        print("-" * 60)
-
-        print("5-day fluctuation, sentimental analysis positive/negative")
         ts.testSingleModel(5, 0, data_set_size)
-        print("-" * 60)
-
-        print("1-day fluctuation, sentimental analysis multiple moods")
+        ts.testSingleModel(0, 1, data_set_size)
         ts.testSingleModel(1, 1, data_set_size)
-        print("-" * 60)
-
-        print("3-day fluctuation, sentimental analysis multiple moods")
         ts.testSingleModel(3, 1, data_set_size)
-        print("-" * 60)
-
-        print("5-day fluctuation, sentimental analysis multiple moods")
         ts.testSingleModel(5, 1, data_set_size)
-        print("-" * 60)
+
 
     if(DATA_SET_SIZE_TEST):
         print("-" * 60)
