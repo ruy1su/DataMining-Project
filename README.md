@@ -15,6 +15,7 @@ This may take a while... results are saved in data-set/tweets/
     python2 tweetsCrawler.py 2010-01-01 2010-01-10
 
 # Run Sentimental Analysis
+    cd utils/
     python2 sentimentalAnalyzerNp.py [mode (0,1)] [numDays (optional)]
     python2 sentimentalAnalyzerNp.py 0
     python2 sentimentalAnalyzerNp.py 1 10
