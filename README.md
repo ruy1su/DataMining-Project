@@ -2,7 +2,7 @@
 Twitter project with topic: Stock Prediction 
 
 # Team 
-Dangran Li, Shunji Zhan, Yaying Ye, Zeyu Zhang, Zixia Weng
+Don Lee, Shunji Zhan, Yaying Ye, Zeyu Zhang, Zixia Weng
 
 # Install
     pip install -r requirements.txt
@@ -13,8 +13,10 @@ Dangran Li, Shunji Zhan, Yaying Ye, Zeyu Zhang, Zixia Weng
     python2 tweetsCrawler.py 2010-01-01 2010-01-10
 
 # Run Sentimental Analysis
+    python2 sentimentalAnalyzerNp.py [mode (0,1)] [numDays (optional)]
+    python2 sentimentalAnalyzerNp.py 0
+    python2 sentimentalAnalyzerNp.py 1 10
     
-
 # Run Models and Evaluations
     python3 main.py
 
