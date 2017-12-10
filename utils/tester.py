@@ -108,7 +108,7 @@ class Tester(object):
             if(mode == 0):
                 # plot predicted_y and test_y curve
                 title = msg + " " + str(cnt - 1) + "-Fold"
-                tools.plot(predicted_y, test_y, title)
+                # tools.plot(predicted_y, test_y, title)
 
                 # computeMSE need input params in excatly same dimension
                 # Here both predicted_y and test_y.values.ravel() is a
@@ -212,9 +212,8 @@ class Tester(object):
         sentimentals = {
             0: 'positive/negative',
             1: 'multiple moods',
-            2: 'N/A',
-            3: 'N/A',
-            4: 'N/A' 
+            2: 'count words',
+            3: 'count words ver.2',
         }
         print("-" * 60)
         print("{}-day fluctuation, sentimental analysis {}".format(fluc, sentimentals[sentiment]))

@@ -8,7 +8,7 @@ import tensorflow as tf
 
 tf = False
 TEST_ALL_MODEL = True
-FEATURE_COMPARISON = False
+FEATURE_COMPARISON = True
 DATA_SET_SIZE_TEST = False
 
 from utils import tester
@@ -37,6 +37,14 @@ def main():
         ts.testSingleModel(1, 1, data_set_size)
         ts.testSingleModel(3, 1, data_set_size)
         ts.testSingleModel(5, 1, data_set_size)
+        ts.testSingleModel(0, 2, data_set_size)
+        ts.testSingleModel(1, 2, data_set_size)
+        ts.testSingleModel(3, 2, data_set_size)
+        ts.testSingleModel(5, 2, data_set_size)
+        ts.testSingleModel(0, 3, data_set_size)
+        ts.testSingleModel(1, 3, data_set_size)
+        ts.testSingleModel(3, 3, data_set_size)
+        ts.testSingleModel(5, 3, data_set_size)
 
 
     if(DATA_SET_SIZE_TEST):
