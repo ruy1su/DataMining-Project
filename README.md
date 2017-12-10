@@ -6,8 +6,10 @@ Don Lee, Shunji Zhan, Yaying Ye, Zeyu Zhang, Zixia Weng
 
 # Install
     pip install -r requirements.txt
+    pip3 install -r requirements.txt
 
 # Run TweetsCrawler
+This may take a while... results are saved in data-set/tweets/
     cd utils/
     python2 tweetsCrawler.py [since] [until]
     python2 tweetsCrawler.py 2010-01-01 2010-01-10

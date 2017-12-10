@@ -5,4 +5,4 @@ scipy
 tensorflow
 matplotlib
 nltk
-codecs
+pyquery
