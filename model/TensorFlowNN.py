@@ -18,7 +18,7 @@ class TensorFlowNN:
         self.classification = classification
         self.plot = plot
 
-    def train(self, X, Y, iterations=100000):
+    def train(self, X, Y, iterations=100000, msg=None):
         # X data (n, d)
         # Y data (n, 1)
         D = X.shape[1]         # dimension of each date point
@@ -51,8 +51,8 @@ class TensorFlowNN:
                 if abs(prev - loss) < 0.00001:
                     break;
                 prev = loss
-        if self.plot:
-            tools.plot(self.predict(X), Y)
+        if msg:
+            tools.plot(self.predict(X), Y, msg)
         # print('----------------------------------------\n')
 
     def predict(self, X):

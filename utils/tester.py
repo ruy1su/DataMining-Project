@@ -212,11 +212,11 @@ class Tester(object):
         sentimentals = {
             0: 'positive/negative',
             1: 'multiple moods',
-            2: 'count words',
-            3: 'count words ver.2',
+            2: '2d term frequency',
+            3: '4d term frequency',
         }
         print("-" * 60)
-        print("{}-day fluctuation, sentimental analysis {}".format(fluc, sentimentals[sentiment]))
+        print("{}-day fluctuation, sentimental analysis mathod: {}".format(fluc, sentimentals[sentiment]))
 
         # linear regression model
         model = TensorFlowNN(0.01, tf.tanh, 2, 2)
@@ -251,15 +251,16 @@ class Tester(object):
             mse = tools.computeMSE(predicted_y, y.values.ravel())
             print("MSE:", mse)
 
-    def testTensorFlowRandom(self, stepSize, hiddenLayers, layerNodes, activation_function):
+    def testTensorFlowRandom(self, stepSize, hiddenLayers, layerNodes, activation_function, noise = 0):
         print('########## tesing tensorflow regression with random data ##########')
         print('stepSize: ' + str(stepSize))
         print('hiddenLayers: ' + str(hiddenLayers))
         print('layerNodes: ' + str(layerNodes))
         print('activation_function: ' + str(activation_function))
-        X, Y = random(30, 2, 0)
+        X, Y = random(30, 2, noise)
         nn = TensorFlowNN(stepSize, activation_function, hiddenLayers, layerNodes)
-        nn.train(X, Y)
+        msg = 'noise = {}%'.format(noise * 100)
+        nn.train(X, Y, msg=msg)
         mse = tools.computeMSE(nn.predict(X), Y.ravel())
         print('training MSE: ' + str(mse))
 

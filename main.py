@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import tensorflow as tf
 
-tf = False
+TF = False
 TEST_ALL_MODEL = True
 FEATURE_COMPARISON = True
 DATA_SET_SIZE_TEST = False
@@ -18,9 +18,13 @@ def main():
     ts = tester.Tester(2)
 
     # Tensorflow Tester
-    if(tf == True):
-        ts.testTensorFlowRandom(stepSize=0.01, hiddenLayers=2, layerNodes=2, activation_function=tf.tanh)
-        ts.testTensorFlow(stepSize=0.01, hiddenLayers=2, layerNodes=2, activation_function=tf.tanh)
+    if(TF):
+        ts.testTensorFlowRandom(stepSize=0.01, hiddenLayers=2, layerNodes=2, activation_function=tf.tanh, noise=0)
+        ts.testTensorFlowRandom(stepSize=0.01, hiddenLayers=2, layerNodes=2, activation_function=tf.tanh, noise=0.1)
+        ts.testTensorFlowRandom(stepSize=0.01, hiddenLayers=2, layerNodes=2, activation_function=tf.tanh, noise=0.3)
+        ts.testTensorFlowRandom(stepSize=0.01, hiddenLayers=2, layerNodes=2, activation_function=tf.tanh, noise=0.5)
+        ts.testTensorFlowRandom(stepSize=0.01, hiddenLayers=2, layerNodes=2, activation_function=tf.tanh, noise=0.8)
+        # ts.testTensorFlow(stepSize=0.01, hiddenLayers=2, layerNodes=2, activation_function=tf.tanh)
 
     # Test all models with same feature selection and dataset
     if(TEST_ALL_MODEL):
