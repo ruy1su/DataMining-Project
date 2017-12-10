@@ -4,3 +4,5 @@ numpy
 scipy
 tensorflow
 matplotlib
+nltk
+codecs
