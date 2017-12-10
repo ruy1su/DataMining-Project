@@ -16,10 +16,18 @@ MSFT_PATH = "data-set/stocks/MSFT.csv"
 AAPL_MOOD_PN = "data-set/sentiments/AAPL-mood-pn.csv"
 GOOG_MOOD_PN = "data-set/sentiments/GOOG-mood-pn.csv"
 MSFT_MOOD_PN = "data-set/sentiments/MSFT-mood-pn.csv"
+# PN-2-dimension
+AAPL_MOOD_PN_CW = "data-set/sentiments/AAPL-mood-pn-cw.csv"
+GOOG_MOOD_PN_CW = "data-set/sentiments/GOOG-mood-pn-cw.csv"
+MSFT_MOOD_PN_CW = "data-set/sentiments/MSFT-mood-pn-cw.csv"
 # Multi-dimension
 AAPL_MOOD_MULTI = "data-set/sentiments/AAPL-mood-multi.csv"
 GOOG_MOOD_MULTI = "data-set/sentiments/GOOG-mood-multi.csv"
 MSFT_MOOD_MULTI = "data-set/sentiments/MSFT-mood-multi.csv"
+# countWords
+AAPL_MOOD_PN_CW2 = "data-set/sentiments/AAPL-mood-multi-countWords.csv"
+GOOG_MOOD_PN_CW2 = "data-set/sentiments/GOOG-mood-multi-countWords.csv"
+MSFT_MOOD_PN_CW2 = "data-set/sentiments/MSFT-mood-multi-countWords.csv"
 
 
 #######################################################################
@@ -288,3 +296,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+

@@ -13,8 +13,12 @@ MOOD_PN_PATH = [tools.GOOG_MOOD_PN, tools.AAPL_MOOD_PN, tools.MSFT_MOOD_PN]
 # define path to sentimental analysis result (multi-dimension)
 MOOD_MULTI_PATH = [tools.GOOG_MOOD_MULTI, tools.AAPL_MOOD_MULTI, tools.MSFT_MOOD_MULTI]
 
+MOOD_PN_CW_PATH = [tools.GOOG_MOOD_PN_CW, tools.AAPL_MOOD_PN_CW, tools.MSFT_MOOD_PN_CW]
+
+MOOD_PN_CW2_PATH = [tools.GOOG_MOOD_PN_CW2, tools.AAPL_MOOD_PN_CW2, tools.MSFT_MOOD_PN_CW2]
+
 # define sentimental analysis path
-MOOD_PATH = [MOOD_PN_PATH, MOOD_MULTI_PATH]
+MOOD_PATH = [MOOD_PN_PATH, MOOD_MULTI_PATH, MOOD_PN_CW_PATH, MOOD_PN_CW2_PATH]
 
 
 class featureExtractor(object):
