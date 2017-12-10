@@ -16,12 +16,12 @@ class sentimentAnalyzerOneDim:
                     self.readFromFolder0(folder)
             if mode == 1:
                 for folder in folders:
-                    print folder + " polarity and subjectivity"
+                    print folder + " pos_score and neg_score"
                     self.readFromFolder1(folder)
         else:
             if mode == 0:
                 for folder in folders:
-                    print folder + " pos_score and neg_score"
+                    print folder + " polarity and subjectivity"
                     self.simpleReadFromFolder0(folder, numDays)
             if mode == 1:
                 for folder in folders:
