@@ -10,8 +10,9 @@ import re
 import indicoio
 import html
 import HTMLParser
+import random
 from datetime import datetime
-indicoio.config.api_key = '67c2a07accd80ed593cdbbf089ed25ad'
+indicoio.config.api_key = 'c23f400f2986ffc2429d8b8b0529146a'
 
 class sentimentAnalyzerMultiDims:
     mode = 0 #default
@@ -20,9 +21,9 @@ class sentimentAnalyzerMultiDims:
     todayDate = '2010/01/01' #default
 
     def read(self):
-        self.readFromPath('AAPL/')
+        # self.readFromPath('AAPL/')
         self.readFromPath('GOOG/')
-        self.readFromPath('MSFT/')
+        # self.readFromPath('MSFT/')
 
     def readFromPath(self,dirStr):
         print ('Company',dirStr)
@@ -85,7 +86,7 @@ class sentimentAnalyzerMultiDims:
         elif self.mode == 1:
             return self.sentimentAnalyzerUsingWordList(twts)
         elif self.mode == 2:
-            return self.sentimentAnalyzerUsingIndicoio(twts)
+            return self.sentimentAnalyzerUsingIndicoio(random.sample(twts, 10))
         else:
             print ("\n--------Wrong Arguements: sentimental mode should be 0,1 or 2-------\n")
 
