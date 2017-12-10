@@ -2,6 +2,7 @@
 
 import pandas as pd
 import numpy as np
+import tensorflow as tf
 
 from utils import stockParser as sp
 from utils import featureExtractor as fe
@@ -12,7 +13,8 @@ from model import mlnn
 from model.TensorFlowNN import TensorFlowNN
 
 # define companies here
-TEST_COMPANY = ["Google", "Apple", "Microsoft"]
+# TEST_COMPANY = ["Google", "Apple", "Microsoft"]
+TEST_COMPANY = ["Google"]
 
 class Tester(object):
     #######################################################################
@@ -51,7 +53,7 @@ class Tester(object):
     #       0 - regression testing
     #       1 - classifier testing
     #############################################################
-    def test(self, model, x, y, mode):
+    def test(self, model, x, y, mode, msg=""):
         predicted_y_set = []
         test_y_set = []
 
@@ -70,7 +72,7 @@ class Tester(object):
             test_y_set.append(test_y.values.ravel())
 
         # measure the prediction results
-        self.measure(predicted_y_set, test_y_set, mode)
+        self.measure(predicted_y_set, test_y_set, mode, msg)
 
 
     #######################################################################
@@ -95,7 +97,7 @@ class Tester(object):
     #       0 - regression testing
     #       1 - classifier testing
     #######################################################################
-    def measure(self, predicted_ys, test_ys, mode):
+    def measure(self, predicted_ys, test_ys, mode, msg=""):
         mse_sum, pre_sum, recall_sum, acc_sum, cnt = 0, 0, 0, 0, 1
 
         for predicted_y, test_y in zip(predicted_ys, test_ys):
@@ -104,14 +106,15 @@ class Tester(object):
 
             # regression measurement
             if(mode == 0):
+                # plot predicted_y and test_y curve
+                title = msg + " " + str(cnt - 1) + "-Fold"
+                tools.plot(predicted_y, test_y, title)
+
                 # computeMSE need input params in excatly same dimension
                 # Here both predicted_y and test_y.values.ravel() is a
                 # n-dimension vector [y1, y2, ..., yn]
                 mse = tools.computeMSE(predicted_y, test_y)
                 mse_sum += mse
-
-                # print("Predict_y", predicted_y);
-                # print("Test_y", test_y);
 
                 print("MSE:", mse)
 
@@ -149,13 +152,15 @@ class Tester(object):
     #
     # Input:
     #   fluc: integer, length of stock fluctuation vector
-    #   sentiment: integer, specify sentiment vector (TBD) 
+    #   sentiment: integer, specify sentiment vector [0: pn, 1: multi]
+    #   data_set_size: limit the size of dataset
     #######################################################################
-    def testAll(self, fluc=5, sentiment=0):
+    def testAllModels(self, fluc=5, sentiment=1, data_set_size=0):
         # linear regression model
         model_lreg = reg.regressionModel(0, gradient_type=0, zscore=True)
         model_svm = svm.SVM(1, zscore=True)
         model_nn = mlnn.MLNN(hidden_layers=(5,), zscore=True)
+        model_tfnn = TensorFlowNN(0.01, tf.tanh, 2, 2)
         
         for i in range(0, len(TEST_COMPANY)):
             # create feature extractor for current company
@@ -163,12 +168,23 @@ class Tester(object):
 
             # get features, label and corresponding date
             x, y, date = extractor.getFeature(fluc, sentiment)
+
+            # set dataset size
+            data_set_size = min(data_set_size, x.shape[0]) if data_set_size else x.shape[0]
+            x = x[:data_set_size]
+            y = y[:data_set_size]
+
             # convert numerical label into discrete value for classifier
             discrete_y = tools.sign(y)
 
             # Test Linear Regression
             print("# Linear Regression Tester with " + TEST_COMPANY[i])
-            self.test(model_lreg, x, y, 0)
+            self.test(model_lreg, x, y, 0, "Linear Regression")
+            print("-" * 60)
+
+            # Test TensorFlow Neural Network
+            print("# TensorFlow Neural Network Tester with " + TEST_COMPANY[i])
+            self.test(model_tfnn, x, y, 0, "TensorFlow Neural Network")
             print("-" * 60)
 
             # Test SVM
@@ -181,19 +197,60 @@ class Tester(object):
             self.test(model_nn, x, discrete_y, 1)
             print("-" * 60)
 
+    #######################################################################
+    # Single Model Tester
+    #
+    # This function will test single model with every dataset (AAPL, GOOG, MSFT)
+    # Note: In this function, we do not adopt K-Folds
+    #
+    # Input:
+    #   fluc: integer, length of stock fluctuation vector
+    #   sentiment: integer, specify sentiment vector [0: pn, 1: multi]
+    #   data_set_size: limit the size of dataset
+    #######################################################################
+    def testSingleModel(self, fluc=5, sentiment=1, data_set_size=0):
+        sentimentals = {
+            0: 'positive/negative',
+            1: 'multiple moods',
+            2: 'N/A',
+            3: 'N/A',
+            4: 'N/A' 
+        }
+        print("-" * 60)
+        print("{}-day fluctuation, sentimental analysis {}".format(fluc, sentimentals[sentiment]))
 
+        # linear regression model
+        model = TensorFlowNN(0.01, tf.tanh, 2, 2)
+        
+        for i in range(0, len(TEST_COMPANY)):
+            # create feature extractor for current company
+            extractor = fe.featureExtractor(i)
 
-    def f(self, X):
-        beta = np.random.rand(X.shape[1], 1)
-        X_beta = X.dot(beta)
-        return X_beta / np.linalg.norm(X_beta)
+            # get features, label and corresponding date
+            x, y, date = extractor.getFeature(fluc, sentiment)
 
-    def random(self, n, m, noise=0):
-        X = np.random.rand(30, 2)
-        Y = self.f(X)
-        if 0 < noise < 1:
-            Y += np.random.normal(noise, noise, Y.shape)     # add noise
-        return (X, Y)
+            # set dataset size
+            data_set_size = min(data_set_size, x.shape[0]) if data_set_size else x.shape[0]
+            x = x[:data_set_size]
+            y = y[:data_set_size]
+
+            # Test TensorFlow Neural Network
+            print("# TensorFlow Neural Network Tester with " + TEST_COMPANY[i])
+
+            model.train(x, y)
+            # predicted_y: [y1, y2, y3, ..., yn]
+            predicted_y = model.predict(x)
+
+            # plot the result
+            msg = "Fluctuation: " + str(fluc) + "-day, Sentiment: " + \
+                str(sentiment) + ", Dataset: " + str(data_set_size)
+            # tools.plot(predicted_y, y.values.ravel(), msg)
+
+            # computeMSE need input params in excatly same dimension
+            # Here both predicted_y and test_y.values.ravel() is a
+            # n-dimension vector [y1, y2, ..., yn]
+            mse = tools.computeMSE(predicted_y, y.values.ravel())
+            print("MSE:", mse)
 
     def testTensorFlowRandom(self, stepSize, hiddenLayers, layerNodes, activation_function):
         print('########## tesing tensorflow regression with random data ##########')
@@ -201,7 +258,7 @@ class Tester(object):
         print('hiddenLayers: ' + str(hiddenLayers))
         print('layerNodes: ' + str(layerNodes))
         print('activation_function: ' + str(activation_function))
-        X, Y = self.random(30, 2, 0)
+        X, Y = random(30, 2, 0)
         nn = TensorFlowNN(stepSize, activation_function, hiddenLayers, layerNodes)
         nn.train(X, Y)
         mse = tools.computeMSE(nn.predict(X), Y.ravel())
@@ -219,6 +276,18 @@ class Tester(object):
             extractor = fe.featureExtractor(i)
             x, y, date = extractor.getFeature(fluc, sentiment)
             self.test(nn, x, y, 0)
+
+def f(X):
+        beta = np.random.rand(X.shape[1], 1)
+        X_beta = X.dot(beta)
+        return X_beta / np.linalg.norm(X_beta)
+
+def random(n, m, noise=0):
+    X = np.random.rand(30, 2)
+    Y = f(X)
+    if 0 < noise < 1:
+        Y += np.random.normal(noise, noise, Y.shape)     # add noise
+    return (X, Y)
 
 def main():
     tester = Tester(5)
