@@ -17,6 +17,9 @@ Don Lee, Shunji Zhan, Yaying Ye, Zeyu Zhang, Zixia Weng
     python2 sentimentalAnalyzerNp.py 0
     python2 sentimentalAnalyzerNp.py 1 10
     
+    python2 sentimentalAnalyzerMulti.py [mode (0,1,2)] [numDays (optional)]
+    python2 sentimentalAnalyzerMulti.py 0
+    python2 sentimentalAnalyzerMulti.py 1 10
 # Run Models and Evaluations
     python3 main.py
 
