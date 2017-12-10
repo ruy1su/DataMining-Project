@@ -4,15 +4,17 @@ Twitter project with topic: Stock Prediction
 # Team 
 Dangran Li, Shunji Zhan, Yaying Ye, Zeyu Zhang, Zixia Weng
 
-# To run
-	sh run.sh
-        pip install -r requirements.txt
-        python2 tweetsCrawler.py 2010-01-01 2010-01-10
-# TweetsCrawler
-        return tweets since argv[0] until argv[1]
-        python2 tweetsCrawler.py since until
-# Websites
-Course Website: http://web.cs.ucla.edu/~yzsun/classes/2017Fall_CS145/schedule.html
-Google Doc: https://docs.google.com/document/d/1WFp37BFSy_vJiymspx5Sf09Fg9UZgQyEm2Lzp5juajI/edit
+# Install
+    pip install -r requirements.txt
 
-Relevant Paper: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.375.4517&rep=rep1&type=pdf
+# Run TweetsCrawler
+    cd utils/
+    python2 tweetsCrawler.py [since] [until]
+    python2 tweetsCrawler.py 2010-01-01 2010-01-10
+
+# Run Sentimental Analysis
+    
+
+# Run Models and Evaluations
+    python3 main.py
+
