@@ -1,5 +1,5 @@
 ##### 
-full data sets and codes please check https://github.com/ZixiaWeng/DataMining-Project
+Full data sets and codes please check https://github.com/ZixiaWeng/DataMining-Project
 
 # CS145DataMining-Project
 Twitter project with topic: Stock Prediction 
